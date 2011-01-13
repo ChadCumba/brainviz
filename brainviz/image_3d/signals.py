@@ -5,9 +5,11 @@ Created on Jan 12, 2011
 '''
 
 from nibabel import load
-from brainviz.image_3d.models import image_3d
+import logging
+LOG_FILENAME = '/Users/chadcumba/python.log'
+logging.basicConfig(filename=LOG_FILENAME, level=logging.DEBUG)
+logger = logging.getLogger('brainviz')
 
 def extract_image_data(sender, **kwargs):
-    image_3d_to_save = kwargs["instance"]
-    
+    pass
     
