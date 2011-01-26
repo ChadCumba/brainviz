@@ -10,5 +10,9 @@ class image_3d(models.Model):
     brain_image = models.FileField(upload_to="brainimages")
     brain_data = LargeMatrixField(unique=False, blank=True, null=True,
                                    editable=False)
+    def __unicode__(self):
+        if self.user is not None:
+            return self.user.username
+        return 'unknown'
     
 pre_save.connect(extract_image_data, sender=image_3d)

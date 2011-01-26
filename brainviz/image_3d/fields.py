@@ -1,8 +1,5 @@
 from django.db import models
-import gzip
 import cPickle
-from django.forms import CharField
-from django.forms.widgets import HiddenInput
 
 class large_matrix(object):
     """An arbitrarily large 3d matrix"""
@@ -29,14 +26,14 @@ class LargeMatrixField(models.Field):
         if isinstance(value, LargeMatrixField):
             return value
         if value == None or value == '':
-            return value
-        unzipped_data = gzip.zlib.decompress(value)
-        return large_matrix(cPickle.loads(unzipped_data))
+            return ''
+        
+        return large_matrix(cPickle.loads(str(value)))
     
     def get_prep_value(self,value):
         """Translate the matrix into raw database data"""
         matrix = cPickle.dumps(value)
-        return gzip.zlib.compress(matrix)
+        return matrix
     
     def db_type(self, connection):
         if connection.settings_dict['ENGINE'] == 'django.db.backends.mysql':
