@@ -1,0 +1,11 @@
+.project
+.pydevproject
+*pyc
+brainviz/static/.svn/
+brainviz/templates/.svn/
+*.svn/
+*.svn/*
+sqlite.db
+*.[pyc]
+*.[db]
+brainviz/static/brainimages/*
