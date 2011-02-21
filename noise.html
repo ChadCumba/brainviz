@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head> 
+		<title>Perlin Noise Example</title> 
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="css/global.css" type="text/css" />
+		<script type="text/javascript" src="js/Point.js"></script>
+		<script type="text/javascript" src="js/Rectangle.js"></script>
+		<script type="text/javascript" src="js/Matrix.js"></script>
+		<script type="text/javascript" src="js/Simplex.js"></script>
+		<script type="text/javascript" src="js/BitmapData.js"></script>
+		
+		<script> 
+			function init(){
+				var bmd = document.getElementById("canvas").bitmapData;
+				
+				bmd.perlinNoise(
+					bmd.width/2, 			
+					bmd.height/2, 								
+					Math.floor(Math.random()*0xffff), 
+					BitmapDataChannel.RED | BitmapDataChannel.BLUE,
+					false 
+				);	
+			};	
+		</script>
+	</head> 
+	<body onload="init();"> 
+		<div id="container">
+			<div id="example-container">
+				<div id="example">
+					<canvas id="canvas" width="300" height="300"></canvas>
+
+				</div> 
+				<div id="code">
+					<pre>var bmd = document.getElementById("canvas").bitmapData;
+						
+bmd.perlinNoise(
+	bmd.width/2, 			
+	bmd.height/2, 								
+	Math.floor(Math.random()*0xffff), 
+	BitmapDataChannel.RED | BitmapDataChannel.BLUE,
+	false 
+);
+					</pre>
+				</div>
+			</div>
+			<div class="break"><img src="res/break.gif"></div>
+			<div id="links">
+				<ul>
+					<li><a href="index.html">back</a></li>
+				</ul>
+			</div>
+		</div>
+	</body> 
+</html>
