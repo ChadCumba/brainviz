@@ -16,5 +16,5 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
     (r'^static/(?P<path>.*)$', 'django.views.static.serve',
         {'document_root': settings.MEDIA_ROOT}),
-    (r'^image', include('brainviz.image.urls')),
+    (r'^image/', include('brainviz.image.urls')),
 )

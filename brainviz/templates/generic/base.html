@@ -1,0 +1,38 @@
+<!--
+Chad Cumba
+Chad.Cumba@mail.utexas.edu
+Developed in the Poldrack Lab at the University of Texas at Austin
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    {% block styles %}
+      {% for sheet in styles %}
+<LINK REL=StyleSheet HREF="{{sheet}}" TYPE="text/css" MEDIA=screen>
+      {% endfor %}
+
+    {% endblock %}
+    {% block javascript %}
+        {% for file in js %}
+<script type="text/javascript" language="javascript" src="{{file}}"></script>
+        {% endfor %}
+    {% endblock %}
+    <title>{% block title %}{{title}}{% endblock %}</title>
+</head>
+
+<body>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div id="content">
+        {% block content %}
+                {{content}}
+        {% endblock %}
+    </div>
+</body>
+</html>
