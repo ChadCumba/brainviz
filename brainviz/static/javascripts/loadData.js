@@ -4,11 +4,13 @@
  * @param dataLocation - string identifying a url to load data from
  */
 function loadJsonDataFromLocation(dataLocation){
-	return $.ajax({
+	var jsonData = $.ajax({
             async: false,
             global: false,
             url: dataLocation,
             cache: false,
             dataType: "json"
         });
+    
+    return $.parseJSON(jsonData.responseText);
 }

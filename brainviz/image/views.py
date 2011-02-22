@@ -18,7 +18,7 @@ def ImageViewer(request):
           'bitmapdata/ColorTransform.js', 'bitmapdata/Matrix.js', 
           'bitmapdata/Point.js', 'bitmapdata/Rectangle.js', 'bitmapdata/Simplex.js',
           'bitmapdata/filters/ColorMatrixFilter.js', 
-          'bitmapdata/modes/Difference.js', 'loadData.js']
+          'bitmapdata/modes/Difference.js', 'loadData.js', 'playground.js']
 
     js = [ settings.MEDIA_URL + "javascripts/" + file for file in js]
     
