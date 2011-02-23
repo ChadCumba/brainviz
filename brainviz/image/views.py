@@ -14,11 +14,10 @@ def Upload(request):
     pass
 
 def ImageViewer(request):
-    js = ['jquery-1.4.2.min.js', 'bitmapdata/BitmapData.js', 
-          'bitmapdata/ColorTransform.js', 'bitmapdata/Matrix.js', 
-          'bitmapdata/Point.js', 'bitmapdata/Rectangle.js', 'bitmapdata/Simplex.js',
-          'bitmapdata/filters/ColorMatrixFilter.js', 
-          'bitmapdata/modes/Difference.js', 'loadData.js', 'playground.js']
+    js = ['jquery-1.4.2.min.js', 'loadData.js', 'playground.js',
+          'events.js', 'extend.js', 'onLoad.js',
+          'brainRenderer.js', 'js16Additions.js', 'observer.js',
+          'viewer.js']
 
     js = [ settings.MEDIA_URL + "javascripts/" + file for file in js]
     

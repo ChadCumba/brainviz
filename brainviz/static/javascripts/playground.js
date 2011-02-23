@@ -62,3 +62,5 @@ function greyScaleFill( pixelValue){
 	return "rgb("+shade+","+shade+","+shade+")";
 			
 }
+
+
