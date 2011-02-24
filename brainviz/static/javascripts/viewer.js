@@ -1,12 +1,16 @@
+
 var viewer = {
 	
 	/*
 	 * functions that publish data for events
 	 */
 	publishers : {
-		onCoronalClick : new Publisher(),
-		onSagittalClick : new Publisher(),
-		onAxialClick : new Publisher(),
+		onCoronalChange : new Publisher(),
+		onSagittalChange : new Publisher(),
+		onAxialChange : new Publisher(),
+		onCoronalRenderingComplete : new Publisher(),
+		onSagittalRenderingComplete : new Publisher(),
+		onAxialRenderingComplete : new Publisher(),
 	},
 	
 	/*
@@ -14,57 +18,60 @@ var viewer = {
 	 * the publishers
 	 */
 	listeners : {
-		dispatchSagittalData : function(eventdata) {
-			if(eventdata == null){
+		
+		/*
+		 * Takes in a list of renderingGroups and calls displaySlice on the
+		 * renderer in each group with the slice number provided in the group
+		 * 
+		 * @param renderingGroups - takes a list of objects, each should 
+		 * 							contain the members slice, renderer, and weight.
+		 * 							Slice is the slice to render, renderer is 
+		 * 							the renderer to dispatch to, and weight is
+		 * 							the order to render in (heavier items render
+		 * 							later than lighter items)
+		 */
+		dispatchRenderingData : function(renderingGroups) {
+			if(renderingGroups == null){
 				throw ('dispatch called with no arguments');
 				return;
 			}
-			if(eventdata.sagittalRenderer == null){
+			if(renderingGroups.length == 0){
 				throw('no renderer to dispatch to');
 				return;
 			}
-			if(eventdata.sagittalSlice == null){
-				throw('no slice to render');
-				return;
+			for(var i = 0; i < renderingGroups.length; i++){
+				if(renderingGroups[i].renderArgs == undefined ){
+					throw('attempting to dispatch renderer number '+i
+					+' with no slice');	
+				}
+				if(renderingGroups[i].renderer == undefined){
+					throw('attempting to dispatch renderer number '+i
+					+' with no renderer');
+				}
+				if(renderingGroups[i].weight == undefined){
+					throw('attempting to dispatch renderer number '+i
+					+' with no weight')
+				}
 			}
-			eventdata.sagittalRenderer.displaySlice(
-				Math.floor(eventdata.sagittalSlice)
-			);
+			
+			renderingGroups.sort(function(a,b){
+				if(a.weight > b.weight){
+					return 1;
+				}
+				if(a.weight < b.weight){
+					return -1;
+				}
+				return 0;
+			});
+			
+			for (var i = 0; i < renderingGroups.length; i++){
+				renderingGroups[i].renderer.render(
+					renderingGroups[i].renderArgs
+				);
+			}
+
 		},
-		dispatchCoronalData : function(eventdata) {
-			if(eventdata == null){
-				throw ('dispatch called with no arguments');
-				return;
-			}
-			if(eventdata.coronalRenderer == null){
-				throw('no renderer to dispatch to');
-				return;
-			}
-			if(eventdata.coronalSlice == null){
-				throw('no slice to render');
-				return;
-			}
-			eventdata.coronalRenderer.displaySlice(
-				Math.floor(eventdata.coronalSlice)
-			);
-		},
-		dispatchAxialData : function(eventdata) {
-			if(eventdata == null){
-				throw ('dispatch called with no arguments');
-				return;
-			}
-			if(eventdata.axialRenderer == null){
-				throw('no renderer to dispatch to');
-				return;
-			}
-			if(eventdata.axialSlice == null){
-				throw('no slice to render');
-				return;
-			}
-			eventdata.axialRenderer.displaySlice(
-				Math.floor(eventdata.axialSlice)
-			);
-		},
+	
 	},
 	
 	/*
@@ -79,67 +86,12 @@ var viewer = {
 	/*
 	 * the image data that will be displayed
 	 */
-	brainImage : {
-		data : null,
-		getCoronalData: function(index){
-			if(viewer.brainImage.data == null){
-				throw('brainImage data is not set');
-			}
-			if(index >= viewer.brainImage.data.length){
-				throw ('Slice out of bounds error. Asked to render '+index
-					+' but only have '+viewer.brainImage.data.length
-					+' slices in Coronal Data');
-			}
-			
-			return viewer.brainImage.data[index];
-		},
-		getSagittalData: function(index){
-			if(viewer.brainImage.data == null){
-				throw('brainImage data is not set');
-			}
-			if(index >= viewer.brainImage.data[0].length){
-				throw ('Slice out of bounds error. Asked to render '+index
-					+' but only have '+viewer.brainImage.data[0].length
-					+' slices in Sagittal Data');
-			}
-			
-			var sagittalSlice = [];
-			var sagittalRow = [];
-			
-			for(var i = 0; i < viewer.brainImage.data.length; i++){
-				sagittalRow = [];
-				for(var j = 0; j < viewer.brainImage.data[i][index].length; j++){
-					sagittalRow.push(viewer.brainImage.data[i][index][j]);
-				}
-				sagittalSlice.push(sagittalRow);
-			}
-			
-			return sagittalSlice;
-		},
-		getAxialData: function(index){
-			if(viewer.brainImage.data == null){
-				throw('brainImage data is not set');
-			}
-			if(index >= viewer.brainImage.data[0][0].length){
-				throw ('Slice out of bounds error. Asked to render '+index
-					+' but only have '+viewer.brainImage.data[0][0].length
-					+' slices in Axial Data');
-			}
-			
-			var axialSlice = [];
-			var axialRow = [];
-			
-			for(var i = 0; i < viewer.brainImage.data.length; i++){
-				axialRow = [];
-				for(var j = 0; j < viewer.brainImage.data[i].length; j++){
-					axialRow.push(viewer.brainImage.data[i][j][index]);
-				}
-				axialSlice.push(axialRow);
-			}
-			
-			return axialSlice;
-		},
-	},
+	brainImage : null,
+	
+	/*
+	 * the background that will be displayed
+	 */
+	brainBackground : null,
 
 	/*
 	 * the renderers that will display the data
@@ -149,5 +101,9 @@ var viewer = {
 		coronalRenderer : null,
 		sagittalRenderer : null,
 		axialRenderer : null,
+		coronalCrosshairs : null,
+		sagittalCrosshairs : null,
+		axialCrosshairs : null,
 	},
+	
 };

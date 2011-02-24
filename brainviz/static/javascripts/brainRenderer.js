@@ -16,9 +16,11 @@
  * 							each individual pixel.
  */
 function brainOrientationRenderer(brainDataCallback, canvasObject, orientationLabel,
-									 pixelSize, fillCallback){
+									 pixelSize, fillCallback,renderingCompleteCallback){
+	//implements Renderer
 	
-	this.context = canvasObject.getContext('2d');
+	//extend the renderer class
+	canvasRenderer.apply(this,[canvasObject, renderingCompleteCallback]);
 	
 	this.getBrainData = brainDataCallback;
 	
@@ -29,6 +31,12 @@ function brainOrientationRenderer(brainDataCallback, canvasObject, orientationLa
 	this.pixelSize = pixelSize;
 	
 	this.fillCallback = fillCallback;
+	
+	var lastSlice = null;
+	
+	this.getLastSlice = function(){
+		return lastSlice;
+	}
 	
 	function render2dMatrixToContext(matrix,contextObject, rectangleSize,
 			fillStyleCallback ){
@@ -101,12 +109,21 @@ function brainOrientationRenderer(brainDataCallback, canvasObject, orientationLa
 			//we call this function with 'apply' as it exists as a private member
 			//and thus 'this', when inside getSlice, will refer to the window
 			//instead of the object. Apply overrides this behavior
-			return getSlice.apply(this,[sliceIndex]);
+			getSlice.apply(this,[sliceIndex]);
 		}else{
 			//same deal as above
 			renderSlice.apply(this,[sliceIndex]);
 		}
+		
+		lastSlice = sliceIndex;
+		
+		if(this.renderingComplete != null &&
+			 typeof this.renderingComplete === 'function'){
+			this.renderingComplete(this);
+		}
+
 	};
 	
+	this.render = this.displaySlice;
 
 };

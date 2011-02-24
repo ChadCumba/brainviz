@@ -1,8 +1,8 @@
 $(window).load(function(){
-	var data = loadJsonDataFromLocation('/image/getdata');
+	var background = loadJsonDataFromLocation('/image/getbackground');
 	
 	//load the data into the viewer
-	viewer.brainImage.data = data;
+	viewer.brainImage = new brainData(background);
 	
 	//load the drawing canvases into the viewer
 	viewer.canvases.coronalCanvas = $('canvas#coronal').first()[0]
@@ -25,42 +25,71 @@ $(window).load(function(){
 			viewer.brainImage.getAxialData,
 			viewer.canvases.axialCanvas, 'Axial', 4
 		);
+	viewer.renderers.coronalCrosshairs = 
+		new crosshairsRenderer(
+			viewer.canvases.coronalCanvas,
+			1,
+			'#FF0000' //red
+		);
+	viewer.renderers.sagittalCrosshairs = 
+		new crosshairsRenderer(
+			viewer.canvases.sagittalCanvas,
+			1,
+			'#FF0000' 
+		);
+	viewer.renderers.axialCrosshairs = 
+		new crosshairsRenderer(
+			viewer.canvases.axialCanvas,
+			1,
+			'#FF0000' 
+		);
+
+	
 
 	//render some default slices
-	viewer.renderers.coronalRenderer.displaySlice(30);
-	viewer.renderers.sagittalRenderer.displaySlice(30);
-	viewer.renderers.axialRenderer.displaySlice(30);
+	viewer.renderers.coronalRenderer.render(30);
+	viewer.renderers.sagittalRenderer.render(30);
+	viewer.renderers.axialRenderer.render(30);
+	//render the default crosshair positions
+	viewer.renderers.coronalCrosshairs.render(
+		Math.floor(viewer.renderers.coronalCrosshairs.getCanvasWidth()/2),
+		Math.floor(viewer.renderers.coronalCrosshairs.getCanvasHeight()/2)
+	);
+	viewer.renderers.sagittalCrosshairs.render(
+		Math.floor(viewer.renderers.sagittalCrosshairs.getCanvasWidth()/2),
+		Math.floor(viewer.renderers.sagittalCrosshairs.getCanvasHeight()/2)
+	);
+	viewer.renderers.axialCrosshairs.render(
+		Math.floor(viewer.renderers.axialCrosshairs.getCanvasWidth()/2),
+		Math.floor(viewer.renderers.axialCrosshairs.getCanvasHeight()/2)
+	);
 	
-	//subscribe the displays to the event handlers
-	viewer.listeners.dispatchAxialData.subscribe(
-		viewer.publishers.onCoronalClick
+	//subscribe the listeners to the event handlers
+	viewer.listeners.dispatchRenderingData.subscribe(
+		viewer.publishers.onSagittalChange
 	);
-	viewer.listeners.dispatchAxialData.subscribe(
-		viewer.publishers.onSagittalClick
+	viewer.listeners.dispatchRenderingData.subscribe(
+		viewer.publishers.onAxialChange
 	);
-	viewer.listeners.dispatchCoronalData.subscribe(
-		viewer.publishers.onSagittalClick
+	viewer.listeners.dispatchRenderingData.subscribe(
+		viewer.publishers.onCoronalChange
 	);
-	viewer.listeners.dispatchCoronalData.subscribe(
-		viewer.publishers.onAxialClick
-	);
-	viewer.listeners.dispatchSagittalData.subscribe(
-		viewer.publishers.onAxialClick
-	);
-	viewer.listeners.dispatchSagittalData.subscribe(
-		viewer.publishers.onCoronalClick
-	);
+	
 	
 	/*
 	 * these are the onclick bindings
 	 * we have to pass in the renderers as eventdata to the callback
-	 * functions, otherwise the 'this' object in the viewer/renderer will 
+	 * functions, because the 'this' object in the viewer/renderer will 
 	 * refer to the actual browser window instead of the controlling object
 	 */
 	$('#coronal').bind( 'click',
 		{
 			sagittalRenderer: viewer.renderers.sagittalRenderer,
 			axialRenderer: viewer.renderers.axialRenderer,
+			coronalCrosshairs : viewer.renderers.coronalCrosshairs,
+			coronalRenderer : viewer.renderers.coronalRenderer,
+			sagittalCrosshairs : viewer.renderers.sagittalCrosshairs,
+			axialCrosshairs : viewer.renderers.axialCrosshairs,
 		},
 		function(event){
 			//offset contains offset.left and offset.top
@@ -71,19 +100,66 @@ $(window).load(function(){
 			var relativeY = event.pageY - offset.top - 1;
 			var sagSlice = relativeX / viewer.renderers.sagittalRenderer.pixelSize;
 			var axSlice = relativeY / viewer.renderers.axialRenderer.pixelSize;
-			viewer.publishers.onCoronalClick.deliver({
-				sagittalSlice : sagSlice,
-				sagittalRenderer: event.data.sagittalRenderer,
-				axialSlice : axSlice,
-				axialRenderer : event.data.axialRenderer,
-			});
+
+			/*
+			 * it would be more clear to deliver an object below,
+			 * however many versions of IE do not support for ... in syntax
+			 * and thus we are using a list so that we can iterate over it
+			 * 
+			 * Note that in addition to the list of renderingGroups we are
+			 * also passing on the event data. The current implementation does 
+			 * not use it, but it may be useful to other subscribers down the road.
+			 */
+			viewer.publishers.onCoronalChange.deliver([
+				
+				{
+					renderArgs : Math.floor(sagSlice),
+					renderer : event.data.sagittalRenderer,
+					weight : 1,
+				},
+				
+				{
+					renderArgs : Math.floor(axSlice),
+					renderer : event.data.axialRenderer,
+					weight : 1,
+				},
+				{
+					renderArgs : [ relativeX, relativeY ],
+					renderer : event.data.coronalCrosshairs,
+					weight : 2,
+				},
+				{
+					renderArgs : event.data.coronalRenderer.getLastSlice(),
+					renderer : event.data.coronalRenderer,
+					weight : 1,
+				},
+				{
+					renderArgs : [  event.data.coronalRenderer.getLastSlice() 
+									* event.data.coronalRenderer.pixelSize,
+									relativeY],
+					renderer : event.data.sagittalCrosshairs,
+					weight : 2,
+				},
+				{
+					renderArgs : [  event.data.coronalRenderer.getLastSlice() 
+									* event.data.coronalRenderer.pixelSize,
+									relativeX ],
+					renderer : event.data.axialCrosshairs,
+					weight : 2,
+				}
+				
+			], event);
 		}
 	);
 	
 	$('#sagittal').bind('click',
 		{
+			sagittalRenderer: viewer.renderers.sagittalRenderer,
+			axialRenderer: viewer.renderers.axialRenderer,
+			coronalCrosshairs : viewer.renderers.coronalCrosshairs,
 			coronalRenderer : viewer.renderers.coronalRenderer,
-			axialRenderer : viewer.renderers.axialRenderer,
+			sagittalCrosshairs : viewer.renderers.sagittalCrosshairs,
+			axialCrosshairs : viewer.renderers.axialCrosshairs,
 		},
 		function(event){
 			//offset contains offset.left and offset.top
@@ -94,19 +170,56 @@ $(window).load(function(){
 			var relativeY = event.pageY - offset.top - 1;
 			var corSlice = relativeX / viewer.renderers.coronalRenderer.pixelSize;
 			var axSlice = relativeY / viewer.renderers.axialRenderer.pixelSize;
-			viewer.publishers.onSagittalClick.deliver({
-				coronalSlice : corSlice,
-				coronalRenderer: event.data.coronalRenderer,
-				axialSlice : axSlice,
-				axialRenderer : event.data.axialRenderer,
-			});
+			viewer.publishers.onSagittalChange.deliver([
+				
+				{
+					renderArgs : Math.floor(corSlice),
+					renderer : event.data.coronalRenderer,
+					weight : 1,
+				},
+				
+				{
+					renderArgs : Math.floor(axSlice),
+					renderer : event.data.axialRenderer,
+					weight : 1,
+				},
+				{
+					renderArgs : event.data.sagittalRenderer.getLastSlice(),
+					renderer : event.data.sagittalRenderer,
+					weight : 1,
+				},
+				{
+					renderArgs : [relativeX, relativeY],
+					renderer : event.data.sagittalCrosshairs,
+					weight : 2,
+				},
+				{
+					renderArgs : [ event.data.sagittalRenderer.getLastSlice() 
+								* event.data.sagittalRenderer.pixelSize,
+								relativeY],
+					renderer : event.data.coronalCrosshairs,
+					weight : 2,
+				},
+				{
+					renderArgs : [ relativeX,
+								event.data.sagittalRenderer.getLastSlice() 
+								* event.data.sagittalRenderer.pixelSize ],
+					renderer : event.data.axialCrosshairs,
+					weight : 2,
+				}
+				
+			], event);
 		}
 	);
 	
 	$('#axial').bind('click',
 		{
 			sagittalRenderer: viewer.renderers.sagittalRenderer,
+			axialRenderer: viewer.renderers.axialRenderer,
+			coronalCrosshairs : viewer.renderers.coronalCrosshairs,
 			coronalRenderer : viewer.renderers.coronalRenderer,
+			sagittalCrosshairs : viewer.renderers.sagittalCrosshairs,
+			axialCrosshairs : viewer.renderers.axialCrosshairs,
 		},
 		function(event){
 			//offset contains offset.left and offset.top
@@ -117,12 +230,46 @@ $(window).load(function(){
 			var relativeY = event.pageY - offset.top - 1;
 			var sagSlice = relativeY / viewer.renderers.coronalRenderer.pixelSize;
 			var corSlice = relativeX / viewer.renderers.sagittalRenderer.pixelSize;
-			viewer.publishers.onAxialClick.deliver({
-				coronalSlice : corSlice,
-				coronalRenderer: event.data.coronalRenderer,
-				sagittalSlice : sagSlice,
-				sagittalRenderer: event.data.sagittalRenderer,
-			});
+			viewer.publishers.onAxialChange.deliver([
+				
+				{
+					renderArgs : Math.floor(corSlice),
+					renderer : event.data.coronalRenderer,
+					weight : 1,
+				},
+				
+				{
+					renderArgs : Math.floor(sagSlice),
+					renderer : event.data.sagittalRenderer,
+					weight : 1,
+				},
+				{
+					renderArgs : event.data.axialRenderer.getLastSlice(),
+					renderer : event.data.axialRenderer,
+					weight : 1,
+				},
+				{
+					renderArgs : [relativeX, relativeY],
+					renderer : event.data.axialCrosshairs,
+					weight: 2,
+				},
+				{
+					renderArgs : [relativeX, 
+									event.data.axialRenderer.getLastSlice()
+									* event.data.axialRenderer.pixelSize],
+					renderer : event.data.sagittalCrosshairs,
+					weight : 2,
+				},
+				{
+					renderArgs : [relativeY, 
+									event.data.axialRenderer.getLastSlice()
+									* event.data.axialRenderer.pixelSize ],
+					renderer : event.data.coronalCrosshairs,
+					weight : 2,
+				},
+				
+				
+			], event);
 		}
 	);
 	

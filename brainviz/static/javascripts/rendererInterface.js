@@ -1,0 +1,1 @@
+var rendererInterface = new Interface('Renderer', ['render']);

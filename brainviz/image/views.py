@@ -17,7 +17,8 @@ def ImageViewer(request):
     js = ['jquery-1.4.2.min.js', 'loadData.js', 'playground.js',
           'events.js', 'extend.js', 'onLoad.js',
           'brainRenderer.js', 'js16Additions.js', 'observer.js',
-          'viewer.js']
+          'viewer.js', 'brainData.js', 'canvasRenderer.js', 
+          'crosshairsRenderer.js', 'interface.js', 'rendererInterface.js']
 
     js = [ settings.MEDIA_URL + "javascripts/" + file for file in js]
     
@@ -33,9 +34,18 @@ def ImageViewer(request):
         context_instance = RequestContext(request))
 
 @gzip_page
+def BackgroundImage(request):
+    chad = User.objects.get(id=1)
+    image = ThreeDimensional.objects.filter(user=chad)[0]
+    image_list_data = nibabel.load(image.brain_image.file.name).get_data().tolist()
+    json_data = json.dumps(image_list_data)
+    
+    return HttpResponse(json_data, mimetype='application/json')
+
+@gzip_page
 def ImageData(request):
     chad = User.objects.get(id=1)
-    image = ThreeDimensional.objects.get(user=chad)
+    image = ThreeDimensional.objects.filter(user=chad)[1]
     image_list_data = nibabel.load(image.brain_image.file.name).get_data().tolist()
     json_data = json.dumps(image_list_data)
     
