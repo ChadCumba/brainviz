@@ -1,29 +1,44 @@
 $(window).load(function(){
+	//var background = loadJsonDataFromLocation('/image/getbackground');
+	//var foreground = loadJsonDataFromLocation('/image/getimage');
 	var background = loadJsonDataFromLocation('/image/getbackground');
-	
 	//load the data into the viewer
-	viewer.brainImage = new brainData(background);
+	viewer.brainImage = new brainData(background.data, background.max,
+										background.min);
 	
 	//load the drawing canvases into the viewer
 	viewer.canvases.coronalCanvas = $('canvas#coronal').first()[0]
 	viewer.canvases.sagittalCanvas = $('canvas#sagittal').first()[0]
 	viewer.canvases.axialCanvas = $('canvas#axial').first()[0]
 	
+	
+	var backgroundFillCallback = function(pixel){
+		
+		var shade = (pixel - viewer.brainImage.getMin()) * 
+			(255 / viewer.brainImage.getMax());
+		shade = Math.floor(shade);
+			
+		return "rgb("+shade+","+shade+","+shade+")";
+	}
+	
 	//load the renderers into the viewer
 	viewer.renderers.coronalRenderer =
 		new brainOrientationRenderer(
 			viewer.brainImage.getCoronalData, 
-			viewer.canvases.coronalCanvas, 'Coronal', 4
+			viewer.canvases.coronalCanvas, 'Coronal', 4,
+			backgroundFillCallback
 		);
 	viewer.renderers.sagittalRenderer = 		
 		new brainOrientationRenderer(
 			viewer.brainImage.getSagittalData,
-			viewer.canvases.sagittalCanvas, 'Sagittal', 4
+			viewer.canvases.sagittalCanvas, 'Sagittal', 4,
+			backgroundFillCallback
 		);
 	viewer.renderers.axialRenderer =	
 		new brainOrientationRenderer(
 			viewer.brainImage.getAxialData,
-			viewer.canvases.axialCanvas, 'Axial', 4
+			viewer.canvases.axialCanvas, 'Axial', 4,
+			backgroundFillCallback
 		);
 	viewer.renderers.coronalCrosshairs = 
 		new crosshairsRenderer(

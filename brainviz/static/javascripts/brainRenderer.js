@@ -69,8 +69,19 @@ function brainOrientationRenderer(brainDataCallback, canvasObject, orientationLa
 			}
 		}
 		
+		contextObject.fillStyle = "#000000";
+	    contextObject.fillRect(0,0,this.getCanvasWidth(), 
+	    	this.getCanvasHeight());
+		
 		for(var i = 0; i < matrix.length; i++){
 			for(var j = 0; j < matrix[i].length; j++){
+				//default color is black. since our 2 major slow points in this
+				//function are the fillStyleCallback and the fillRect call
+				//this eliminates calling anything that's zero, speeding
+				//up the loop by about 60ms on average.
+				if(matrix[i][j] == 0){
+					continue;
+				}
 				contextObject.fillStyle = fillStyleCallback.apply(
 											this,[matrix[i][j]]);
 				contextObject.fillRect(i * rectangleSize, j * rectangleSize,
@@ -85,8 +96,8 @@ function brainOrientationRenderer(brainDataCallback, canvasObject, orientationLa
 	 * as renderSlice 
 	 */
 	function getSlice(sliceToRetrieve){
-		render2dMatrixToContext(this.getBrainData(sliceToRetrieve), 
-			this.context, this.pixelSize, this.fillCallback );
+		render2dMatrixToContext.apply(this, [this.getBrainData(sliceToRetrieve), 
+			this.context, this.pixelSize, this.fillCallback] );
 	};
 	/*
 	 * @param sliceToRender - int desscribing the slice to render
@@ -95,8 +106,8 @@ function brainOrientationRenderer(brainDataCallback, canvasObject, orientationLa
 	 */
 	function renderSlice(sliceToRender){
 		
-		render2dMatrixToContext(this.getBrainData(sliceToRender), 
-			this.context, this.pixelSize, this.fillCallback )
+		render2dMatrixToContext.apply(this,[this.getBrainData(sliceToRender), 
+			this.context, this.pixelSize, this.fillCallback ])
 		this.renderedSlices.push(sliceToRender);
 	};
 	/*

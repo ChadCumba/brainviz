@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 import nibabel, json
 from django.utils.decorators import decorator_from_middleware
 from django.middleware.gzip import GZipMiddleware
+from numpy import nan_to_num, ndarray
 
 gzip_page = decorator_from_middleware(GZipMiddleware)
 
@@ -37,8 +38,25 @@ def ImageViewer(request):
 def BackgroundImage(request):
     chad = User.objects.get(id=1)
     image = ThreeDimensional.objects.filter(user=chad)[0]
-    image_list_data = nibabel.load(image.brain_image.file.name).get_data().tolist()
-    json_data = json.dumps(image_list_data)
+        
+    image_handle = nibabel.load(image.brain_image.file.name)
+    image_data = image_handle.get_data()
+    image_list_data = image_data.tolist()
+    
+    #for some reason ndarray.max returns an ndarray with 1 member
+    #which is a numpy.flaot32. this converts all that to a regular python float    
+    max = ndarray.max(image_data).tolist()
+    min = ndarray.min(image_data).tolist()
+   
+    
+    json_object = {
+                   'data' : image_list_data,
+                   'max' : max,
+                   'min' : min,
+    }
+
+    
+    json_data = json.dumps(json_object)
     
     return HttpResponse(json_data, mimetype='application/json')
 
@@ -46,7 +64,23 @@ def BackgroundImage(request):
 def ImageData(request):
     chad = User.objects.get(id=1)
     image = ThreeDimensional.objects.filter(user=chad)[1]
-    image_list_data = nibabel.load(image.brain_image.file.name).get_data().tolist()
-    json_data = json.dumps(image_list_data)
+    image_handle = nibabel.load(image.brain_image.file.name)
+    image_data = image_handle.get_data()
+    image_list_data = image_data.tolist()
+    
+    #for some reason ndarray.max returns an ndarray with 1 member
+    #which is a numpy.flaot32. this converts all that to a regular python float    
+    max = ndarray.max(image_data).tolist()
+    min = ndarray.min(image_data).tolist()
+   
+    
+    json_object = {
+                   'data' : image_list_data,
+                   'max' : max,
+                   'min' : min,
+    }
+
+    
+    json_data = json.dumps(json_object)
     
     return HttpResponse(json_data, mimetype='application/json')

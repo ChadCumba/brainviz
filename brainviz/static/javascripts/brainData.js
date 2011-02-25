@@ -1,6 +1,17 @@
-function brainData(data){
+function brainData(data, max, min){
 	
 		this.data = data;
+		
+		var myMax = max;
+		var myMin = min;
+		
+		this.getMax = function(){
+			return myMax;
+		}
+		
+		this.getMin = function(){
+			return myMin;
+		}
 		
 		this.getCoronalData = function(index){
 				if(viewer.brainImage.data == null){
