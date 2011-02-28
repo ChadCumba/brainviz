@@ -74,6 +74,7 @@ function brainOrientationRenderer(brainDataCallback, canvasObject, orientationLa
 	    	this.getCanvasHeight());
 		
 		for(var i = 0; i < matrix.length; i++){
+			
 			for(var j = 0; j < matrix[i].length; j++){
 				//default color is black. since our 2 major slow points in this
 				//function are the fillStyleCallback and the fillRect call
@@ -85,7 +86,7 @@ function brainOrientationRenderer(brainDataCallback, canvasObject, orientationLa
 				contextObject.fillStyle = fillStyleCallback.apply(
 											this,[matrix[i][j]]);
 				contextObject.fillRect(i * rectangleSize, 
-					this.getCanvasHeight() - (j * rectangleSize) - 1,
+					j * rectangleSize,
 					rectangleSize, rectangleSize);
 			}
 		}
