@@ -1,6 +1,9 @@
 function brainData(data, max, min){
 	
+	
+	
 		this.data = data;
+		
 		
 		var myMax = max;
 		var myMin = min;

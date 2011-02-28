@@ -1,7 +1,7 @@
 $(window).load(function(){
 	//var background = loadJsonDataFromLocation('/image/getbackground');
 	//var foreground = loadJsonDataFromLocation('/image/getimage');
-	var background = loadJsonDataFromLocation('/image/getbackground');
+	var background = loadJsonDataFromLocation('/image/getimage');
 	//load the data into the viewer
 	viewer.brainImage = new brainData(background.data, background.max,
 										background.min);
@@ -14,8 +14,12 @@ $(window).load(function(){
 	
 	var backgroundFillCallback = function(pixel){
 		
-		var shade = (pixel - viewer.brainImage.getMin()) * 
-			(255 / viewer.brainImage.getMax());
+		var offset = Math.abs(viewer.brainImage.getMin());
+		
+						
+		var shade = 255 * ( (pixel + offset) / 
+			(viewer.brainImage.getMax() + offset));
+		
 		shade = Math.floor(shade);
 			
 		return "rgb("+shade+","+shade+","+shade+")";
@@ -113,9 +117,21 @@ $(window).load(function(){
 			//not pixels
 			var relativeX = event.pageX - offset.left - 1;
 			var relativeY = event.pageY - offset.top - 1;
-			var sagSlice = relativeX / viewer.renderers.sagittalRenderer.pixelSize;
-			var axSlice = relativeY / viewer.renderers.axialRenderer.pixelSize;
-
+			var sagSlice = relativeX / event.data.sagittalRenderer.pixelSize;
+			var axSlice = relativeY / event.data.axialRenderer.pixelSize;
+			
+			var voxelValue = viewer.brainImage.data
+				[event.data.coronalRenderer.getLastSlice()]
+				[Math.floor(sagSlice)]
+				[viewer.brainImage.data[0][0].length - Math.floor(axSlice) -1];
+			
+			
+			$('#coords > p').html(
+				event.data.coronalRenderer.getLastSlice()+" "
+				+Math.floor(sagSlice)+" "+Math.floor(axSlice)				
+			);
+			
+			$('#voxel-data > p').html(voxelValue);
 			/*
 			 * it would be more clear to deliver an object below,
 			 * however many versions of IE do not support for ... in syntax
@@ -185,6 +201,21 @@ $(window).load(function(){
 			var relativeY = event.pageY - offset.top - 1;
 			var corSlice = relativeX / viewer.renderers.coronalRenderer.pixelSize;
 			var axSlice = relativeY / viewer.renderers.axialRenderer.pixelSize;
+			
+			var voxelValue = viewer.brainImage.data
+				[Math.floor(corSlice)]
+				[event.data.sagittalRenderer.getLastSlice()]
+				[viewer.brainImage.data[0][0].length - 1 - Math.floor(axSlice)];
+			
+			
+			$('#coords > p').html(
+				Math.floor(corSlice)+" "
+				+event.data.sagittalRenderer.getLastSlice()+" "
+				+Math.floor(axSlice)				
+			);
+			
+			$('#voxel-data > p').html(voxelValue);
+			
 			viewer.publishers.onSagittalChange.deliver([
 				
 				{
@@ -245,6 +276,21 @@ $(window).load(function(){
 			var relativeY = event.pageY - offset.top - 1;
 			var sagSlice = relativeY / viewer.renderers.coronalRenderer.pixelSize;
 			var corSlice = relativeX / viewer.renderers.sagittalRenderer.pixelSize;
+
+			var voxelValue = viewer.brainImage.data
+				[Math.floor(corSlice)]
+				[viewer.brainImage.data[0].length - 1 - Math.floor(sagSlice)]
+				[event.data.axialRenderer.getLastSlice()];
+			
+			
+			$('#coords > p').html(
+				Math.floor(corSlice)+" "
+				+Math.floor(sagSlice)+" "
+				+event.data.axialRenderer.getLastSlice()				
+			);
+			
+			$('#voxel-data > p').html(voxelValue);			
+			
 			viewer.publishers.onAxialChange.deliver([
 				
 				{
