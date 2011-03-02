@@ -20,7 +20,8 @@ def ImageViewer(request, **kwargs):
           'events.js', 'extend.js', 'onLoad.js',
           'brainRenderer.js', 'js16Additions.js', 'observer.js',
           'viewer.js', 'brainData.js', 'canvasRenderer.js', 
-          'crosshairsRenderer.js', 'interface.js', 'rendererInterface.js']
+          'crosshairsRenderer.js', 'interface.js', 'rendererInterface.js',
+          'urlParameters.js', 'eventBindings.js']
 
     js = [ settings.MEDIA_URL + "javascripts/" + file for file in js]
     
