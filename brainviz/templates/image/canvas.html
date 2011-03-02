@@ -1,5 +1,11 @@
 {% extends "generic/base.html" %}
 
+{% block header_additions %}
+	<script type="text/javascript" language="javascript">
+		var image_id_to_load = {{image_id}};
+	</script>
+{% endblock %}
+
 {% block content %}
 	<canvas id="sagittal" width="240" height="240"></canvas>
 	<canvas id="coronal" width="288" height="240"></canvas>

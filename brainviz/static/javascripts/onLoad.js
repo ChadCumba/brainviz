@@ -1,7 +1,15 @@
 $(window).load(function(){
 	//var background = loadJsonDataFromLocation('/image/getbackground');
 	//var foreground = loadJsonDataFromLocation('/image/getimage');
-	var background = loadJsonDataFromLocation('/image/getimage');
+	var imageUrl = '/image/getimage';
+	
+	if(image_id_to_load != undefined){
+		if(image_id_to_load != null){
+			imageUrl = imageUrl + "/" + image_id_to_load;
+		}
+	}
+	
+	var background = loadJsonDataFromLocation(imageUrl);
 	
 	for(var i = 0; i < background.data.length; i++){
 		background.data[i].reverse();

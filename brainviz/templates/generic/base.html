@@ -18,6 +18,8 @@ Developed in the Poldrack Lab at the University of Texas at Austin
 <script type="text/javascript" language="javascript" src="{{file}}"></script>
         {% endfor %}
     {% endblock %}
+    {% block header_additions %}
+    {% endblock %}
     <title>{% block title %}{{title}}{% endblock %}</title>
 </head>
 
