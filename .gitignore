@@ -10,3 +10,4 @@ sqlite.db
 *.[db]
 brainviz/static/brainimages/*
 adminpass
+brainviz/settings.py
