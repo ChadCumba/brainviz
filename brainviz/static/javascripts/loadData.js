@@ -8,7 +8,7 @@ function loadJsonDataFromLocation(dataLocation){
             async: false,
             global: false,
             url: dataLocation,
-            cache: false,
+            cache: true,
             dataType: "json"
         });
     

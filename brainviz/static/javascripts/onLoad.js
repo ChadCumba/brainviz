@@ -49,7 +49,7 @@ $(window).load(function(){
 			
 		return "rgb("+shade+","+shade+","+shade+")";
 	}
-	
+
 	//load the renderers into the viewer
 	viewer.renderers.coronalRenderer =
 		new brainOrientationRenderer(
@@ -87,7 +87,7 @@ $(window).load(function(){
 			1,
 			'#FF0000' 
 		);
-	
+
 	//subscribe the listeners to the event handlers
 	viewer.listeners.dispatchRenderingData.subscribe(
 		viewer.publishers.onSagittalChange
@@ -101,7 +101,7 @@ $(window).load(function(){
 	viewer.listeners.updateTextDisplay.subscribe(
 		viewer.publishers.onCrosshairChange
 	);
-	
+
 	
 	//sets the click handling bindings
 	viewer.setEventBindings();
@@ -115,7 +115,7 @@ $(window).load(function(){
 		var clickEvent = $.Event('click');
 		clickEvent.relativeX = parseInt($_GET['clickX']);
 		clickEvent.relativeY = parseInt($_GET['clickY']);
-		
+	
 		switch($_GET['axis']){
 			case "coronal":
 				viewer.renderers.coronalRenderer.render(parseInt($_GET['slice']));
@@ -128,7 +128,9 @@ $(window).load(function(){
 				viewer.renderers.sagittalRenderer.render(parseInt($_GET['slice']));
 				viewer.renderers.sagittalCrosshairs.render(
 					clickEvent.relativeX,clickEvent.relativeY);
+					
 				$(viewer.canvases.sagittalCanvas).trigger(clickEvent);
+				
 				break;
 			case "axial":
 				viewer.renderers.axialRenderer.render(parseInt($_GET['slice']));
@@ -161,5 +163,5 @@ $(window).load(function(){
 			Math.floor(viewer.renderers.axialCrosshairs.getCanvasHeight()/2)
 		);
 	}
-	
+
 });
