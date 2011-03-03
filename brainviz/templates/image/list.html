@@ -3,7 +3,7 @@
 {% block content %}
 
 	{% for image in images.object_list %}
-		{% url brainviz.image.views.ImageViewer image.user.username image.name as the_url %}
+		{% url brainviz.image.views.ImageViewer image.user.username image.brain_slug as the_url %}
 			{% if the_url %}
 				<a href="{{the_url}}">{{image.user.username }}-{{ image.name }}</a><br>
 			{% endif %}

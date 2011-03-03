@@ -26,6 +26,9 @@ class ThreeDimensional(models.Model):
     brain_image = models.FileField(upload_to=get_brain_image_path)
     brain_data = LargeMatrixField(unique=False, blank=True, null=True,
                                    editable=False)
+    brain_slug = models.SlugField(null=False)
+    user_slug = models.SlugField(null=False)
+    
     def __unicode__(self):
         if self.user is not None:
             return self.user.username + '-' + self.name

@@ -6,4 +6,8 @@ Created on Jan 11, 2011
 from brainviz.image.models import ThreeDimensional
 from django.contrib import admin
 
-admin.site.register(ThreeDimensional)
+class ImageAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'brain_slug' : ('name',),
+                           'user_slug': ('user',),}
+
+admin.site.register(ThreeDimensional, ImageAdmin)

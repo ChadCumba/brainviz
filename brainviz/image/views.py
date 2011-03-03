@@ -32,12 +32,12 @@ def ImageViewer(request, **kwargs):
         user_name = kwargs['user_name']
     else:
         user_name = 'chad'
-    if 'image_name' in kwargs:
-        image_name = kwargs['image_name']
+    if 'image_slug' in kwargs:
+        image_slug = kwargs['image_slug']
     else:
-        image_name = '654'
+        image_slug = '654'
     
-    image_queryset = ThreeDimensional.objects.filter(name=image_name)
+    image_queryset = ThreeDimensional.objects.filter(brain_slug=image_slug)
     if image_queryset.count() is not 1:
         image_owner = User.objects.get(username=user_name)
         image_queryset.filter(user=image_owner)
