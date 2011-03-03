@@ -53,18 +53,21 @@ $(window).load(function(){
 	//load the renderers into the viewer
 	viewer.renderers.coronalRenderer =
 		new brainOrientationRenderer(
+			viewer.brainImage,
 			viewer.brainImage.getCoronalData, 
 			viewer.canvases.coronalCanvas, 'Coronal', 4,
 			backgroundFillCallback
 		);
 	viewer.renderers.sagittalRenderer = 		
 		new brainOrientationRenderer(
+			viewer.brainImage,
 			viewer.brainImage.getSagittalData,
 			viewer.canvases.sagittalCanvas, 'Sagittal', 4,
 			backgroundFillCallback
 		);
 	viewer.renderers.axialRenderer =	
 		new brainOrientationRenderer(
+			viewer.brainImage,
 			viewer.brainImage.getAxialData,
 			viewer.canvases.axialCanvas, 'Axial', 4,
 			backgroundFillCallback

@@ -15,12 +15,22 @@
  * 							fillCallBack will determine the color/shading of
  * 							each individual pixel.
  */
-function brainOrientationRenderer(brainDataCallback, canvasObject, orientationLabel,
+function brainOrientationRenderer(brainDataObject, brainDataCallback, canvasObject, orientationLabel,
 									 pixelSize, fillCallback,renderingCompleteCallback){
 	//implements Renderer
 	
 	//extend the renderer class
 	canvasRenderer.apply(this,[canvasObject, renderingCompleteCallback]);
+	
+	/*
+	 * we store both the brainObject and brainDataCallback so that we can call
+	 * the getBrainData callback like this:
+	 * this.getBrainData.apply(this.brainObject,[index]);
+	 * this allows us to call an arbitrary function, using the scope of the brain
+	 * object we are passed. If we just call this.getBrainData(index) then 
+	 * getBrainData will be unable to access members of its class.
+	 */
+	this.brainObject = brainDataObject;
 	
 	this.getBrainData = brainDataCallback;
 	
@@ -98,7 +108,8 @@ function brainOrientationRenderer(brainDataCallback, canvasObject, orientationLa
 	 * as renderSlice 
 	 */
 	function getSlice(sliceToRetrieve){
-		render2dMatrixToContext.apply(this, [this.getBrainData(sliceToRetrieve), 
+		render2dMatrixToContext.apply(this,
+			[this.getBrainData.apply(this.brainObject, [sliceToRetrieve]), 
 			this.context, this.pixelSize, this.fillCallback] );
 	};
 	/*
@@ -108,7 +119,8 @@ function brainOrientationRenderer(brainDataCallback, canvasObject, orientationLa
 	 */
 	function renderSlice(sliceToRender){
 		
-		render2dMatrixToContext.apply(this,[this.getBrainData(sliceToRender), 
+		render2dMatrixToContext.apply(this,
+			[this.getBrainData.apply(this.brainObject, [sliceToRetrieve]), 
 			this.context, this.pixelSize, this.fillCallback ])
 		this.renderedSlices.push(sliceToRender);
 	};

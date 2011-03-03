@@ -10,42 +10,43 @@ function brainData(data, max, min){
 		
 		this.getMax = function(){
 			return myMax;
-		}
+		};
 		
 		this.getMin = function(){
 			return myMin;
-		}
+		};
 		
 		this.getCoronalData = function(index){
-				if(viewer.brainImage.data == null){
+				if(this.data === null){
 					throw('brainImage data is not set');
 				}
-				if(index >= viewer.brainImage.data.length){
+				if(index >= this.data.length){
 					throw ('Slice out of bounds error. Asked to render '+index
-						+' but only have '+viewer.brainImage.data.length
+						+' but only have '+this.data.length
 						+' slices in Coronal Data');
 				}
 				
-				return viewer.brainImage.data[index];
+				return this.data[index];
 			};
 		
 		this.getSagittalData = function(index){
-				if(viewer.brainImage.data == null){
+				if(this.data === null){
 					throw('brainImage data is not set');
 				}
-				if(index >= viewer.brainImage.data[0].length){
+				if(index >= this.data[0].length){
 					throw ('Slice out of bounds error. Asked to render '+index
-						+' but only have '+viewer.brainImage.data[0].length
+						+' but only have '+this.data[0].length
 						+' slices in Sagittal Data');
 				}
 				
 				var sagittalSlice = [];
 				var sagittalRow = [];
-				
-				for(var i = 0; i < viewer.brainImage.data.length; i++){
+				var i;
+				var j;
+				for( i = 0; i < this.data.length; i++){
 					sagittalRow = [];
-					for(var j = 0; j < viewer.brainImage.data[i][index].length; j++){
-						sagittalRow.push(viewer.brainImage.data[i][index][j]);
+					for(j = 0; j < this.data[i][index].length; j++){
+						sagittalRow.push(this.data[i][index][j]);
 					}
 					sagittalSlice.push(sagittalRow);
 				}
@@ -54,22 +55,24 @@ function brainData(data, max, min){
 			};
 			
 		this.getAxialData = function(index){
-			if(viewer.brainImage.data == null){
+			if(this.data === null){
 				throw('brainImage data is not set');
 			}
-			if(index >= viewer.brainImage.data[0][0].length){
+			if(index >= this.data[0][0].length){
 				throw ('Slice out of bounds error. Asked to render '+index
-					+' but only have '+viewer.brainImage.data[0][0].length
+					+' but only have '+this.data[0][0].length
 					+' slices in Axial Data');
 			}
 			
 			var axialSlice = [];
 			var axialRow = [];
+			var i;
+			var j;
 			
-			for(var i = 0; i < viewer.brainImage.data.length; i++){
+			for( i = 0; i < this.data.length; i++){
 				axialRow = [];
-				for(var j = 0; j < viewer.brainImage.data[i].length; j++){
-					axialRow.push(viewer.brainImage.data[i][j][index]);
+				for(j = 0; j < this.data[i].length; j++){
+					axialRow.push(this.data[i][j][index]);
 				}
 				axialSlice.push(axialRow);
 			}
