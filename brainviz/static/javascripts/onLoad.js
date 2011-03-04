@@ -1,5 +1,9 @@
 $(window).load(function(){
 	
+	/* global viewer: false, image_id_to_load: false, Math: false,
+	 * loadJsonDataFromLocation: false, brainData: false
+	 */ 
+	
 	var imageUrl = '/image/getimage';
 	
 	/*

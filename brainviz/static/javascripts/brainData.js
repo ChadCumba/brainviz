@@ -1,9 +1,21 @@
+/*
+ * This class holds the brain data and provides accessor functions
+ * @param data - a 3d matrix of arbitrary size that contains brain data.
+ * 				must be a cube.
+ * @param max - the largest value in the matrix
+ * @param min - the smallest value in the matrix
+ * 
+ * provides five accessor functions:
+ * getMax - returns the largest item in the matrix
+ * getMin - returns the smallest item in the matrix
+ * getCoronalData(index) - returns the coronal slice for the index given,
+ * 							throws index out of bounds error
+ * getSagittalData(index) - returns the sagittal slice for the index
+ * getAxialData(index) - returns the axial slice for the index
+ */
 function brainData(data, max, min){
 	
-	
-	
 		this.data = data;
-		
 		
 		var myMax = max;
 		var myMin = min;
@@ -16,6 +28,12 @@ function brainData(data, max, min){
 			return myMin;
 		};
 		
+		/*
+		 * retuns a 2d matrix of the data 
+		 * note that this is a shallow copy, and alterations to the returned
+		 * value will alter the underlying 3d matrix
+		 * @param index - an int ranging from 0 to data.length - 1
+		 */
 		this.getCoronalData = function(index){
 				if(this.data === null){
 					throw('brainImage data is not set');

@@ -3,6 +3,9 @@
  * Usage: brainOrientationRenderer.label -> returns the label
  * brainOrientationRenderer.displaySlice(int) -> displays the requested brain 
  * 	slice
+ * @param brainDataObject - a pointer to the object that the brain data is stored
+ * 							in. this is necessary as we invoke the data callback 
+ * 							via callback.apply(brainDataObject,[args])
  * @param brainDataCallback - function that takes a single int argument, returns 
  * 								a 2d matrix that represents the slice
  * @param canvasObject - raw dom canvas object to draw on
@@ -14,6 +17,8 @@
  * 							the matrix provided by brainDataCallback, as such
  * 							fillCallBack will determine the color/shading of
  * 							each individual pixel.
+ * @param renderingCompleteCallback - function that is invoked after rendering
+ * 										is complete.
  */
 function brainOrientationRenderer(brainDataObject, brainDataCallback, canvasObject, orientationLabel,
 									 pixelSize, fillCallback,renderingCompleteCallback){
@@ -32,6 +37,9 @@ function brainOrientationRenderer(brainDataObject, brainDataCallback, canvasObje
 	 */
 	this.brainObject = brainDataObject;
 	
+	/*
+	 * callback function that should return a 2d matrix of data
+	 */
 	this.getBrainData = brainDataCallback;
 	
 	this.label = orientationLabel;
@@ -48,6 +56,13 @@ function brainOrientationRenderer(brainDataObject, brainDataCallback, canvasObje
 		return lastSlice;
 	}
 	
+	/*
+	 * internal use only
+	 * this actually draws a 2d matrix onto the canvas object
+	 * @param matrix - a 2d matrix of data points
+	 * @param contextObject - a 2d drawing context
+	 * @param rectangleSize - int, the size of the pixels to draw (in px)
+	 */
 	function render2dMatrixToContext(matrix,contextObject, rectangleSize,
 			fillStyleCallback ){
 		if (matrix[0].length == undefined ){

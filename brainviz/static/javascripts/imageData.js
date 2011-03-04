@@ -1,7 +1,6 @@
 /*
  * these aren't accurate as I don't actually know the difference between
  * the anatomical orientations.
- * @TODO get the correct orientations
  */
 
 var brainImage = {
