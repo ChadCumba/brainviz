@@ -21,5 +21,20 @@
 	<div id="permanent-url" class="plaintext url">
 		<a href=""></a>
 	</div>
+	<div id="coronal-backgrounds" class="hidden">
+		{% for image in coronal_backgrounds %}
+			<img src="{{image}}" class="hidden image">
+		{% endfor %}
+	</div>
+	<div id="sagittal-backgrounds" class="hidden">
+		{% for image in sagittal_backgrounds %}
+			<img src="{{image}}" class="hidden image">
+		{% endfor %}
+	</div>
+	<div id="axial-backgrounds" class="hidden">
+		{% for image in axial_backgrounds %}
+			<img src="{{image}}" class="hidden image">
+		{% endfor %}
+	</div>
 	{{content}}
 {% endblock %}

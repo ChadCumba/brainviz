@@ -9,6 +9,8 @@ from django.utils.decorators import decorator_from_middleware
 from django.middleware.gzip import GZipMiddleware
 from numpy import nan_to_num, ndarray, array, float32
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from base64 import b64decode
+from os import path, listdir
 
 gzip_page = decorator_from_middleware(GZipMiddleware)
 
@@ -21,7 +23,7 @@ def ImageViewer(request, **kwargs):
           'brainRenderer.js', 'js16Additions.js', 'observer.js',
           'viewer.js', 'brainData.js', 'canvasRenderer.js', 
           'crosshairsRenderer.js', 'interface.js', 'rendererInterface.js',
-          'urlParameters.js', 'eventBindings.js']
+          'urlParameters.js', 'eventBindings.js', 'backgroundRenderer.js']
 
     js = [ settings.MEDIA_URL + "javascripts/" + file for file in js]
     
@@ -49,12 +51,28 @@ def ImageViewer(request, **kwargs):
     
     image_id = image_queryset[0].id
     
+    coronal_backgrounds = listdir(
+        path.join(settings.MEDIA_ROOT, 'backgrounds', 'coronal'))
+    coronal_backgrounds = [ settings.MEDIA_URL + "backgrounds/coronal/" + file
+                           for file in coronal_backgrounds]
+    sagittal_backgrounds = listdir(
+        path.join(settings.MEDIA_ROOT, 'backgrounds', 'sagittal'))
+    sagittal_backgrounds = [ settings.MEDIA_URL + "backgrounds/sagittal/" + file
+                           for file in sagittal_backgrounds]
+    axial_backgrounds = listdir(
+        path.join(settings.MEDIA_ROOT, 'backgrounds', 'axial'))
+    axial_backgrounds = [ settings.MEDIA_URL + "backgrounds/axial/" + file
+                           for file in axial_backgrounds]
+    
     return render_to_response(
         'image/canvas.html',
         {'title':'Image Viewer',
          'js': js,
          'styles': styles,
          'image_id' : image_id,
+         'coronal_backgrounds': coronal_backgrounds,
+         'sagittal_backgrounds' : sagittal_backgrounds,
+         'axial_backgrounds' : axial_backgrounds,
          },
         context_instance = RequestContext(request))
 
@@ -130,3 +148,23 @@ def ImageListing(request):
         images = paginator.page(paginator.num_pages)
 
     return render_to_response('image/list.html', {"images": images})
+
+def SaveImageString(request):
+    if request.method != 'POST':
+        return render_to_response('generic/base.html', 
+                                  {'content': 'Something went wrong'})
+    if 'image_string' not in request.POST or 'image_name' not in request.POST:
+        return render_to_response('generic/base.html',
+                                  {'content': 'Something went wrong'})
+    data_string = request.POST['image_string']
+    data_string = data_string[data_string.find(',') + 1:]
+    data_string = b64decode(data_string)
+    file_handle = open(path.join(settings.MEDIA_ROOT, request.POST['image_name']),
+                       'wb')
+    file_handle.writelines(data_string)
+    file_handle.close()
+    
+    json_data = json.dumps('Success')
+    return HttpResponse(json_data, mimetype="application/json")
+    
+    

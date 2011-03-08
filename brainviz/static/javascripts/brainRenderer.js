@@ -62,9 +62,13 @@ function brainOrientationRenderer(brainDataObject, brainDataCallback, canvasObje
 	 * @param matrix - a 2d matrix of data points
 	 * @param contextObject - a 2d drawing context
 	 * @param rectangleSize - int, the size of the pixels to draw (in px)
+	 * @param fillStyleCallback - callback function that takes a pixel value
+	 * 								and returns a css color
+	 * @param threshold - a value such that all pixels <= threshold are not
+	 * 						rendered.
 	 */
 	function render2dMatrixToContext(matrix,contextObject, rectangleSize,
-			fillStyleCallback ){
+			fillStyleCallback, threshold){
 		if (matrix[0].length == undefined ){
 			throw('First arg must be 2 dimensional matrix');
 			return;
@@ -93,11 +97,11 @@ function brainOrientationRenderer(brainDataObject, brainDataCallback, canvasObje
 				return "rgb("+shade+","+shade+","+shade+")";
 			}
 		}
+		if(threshold == undefined){
+			threshold = -Infinity
+		}
 		
-		contextObject.fillStyle = "#D0D0D0";
-	    contextObject.fillRect(0,0,this.getCanvasWidth(), 
-	    	this.getCanvasHeight());
-		
+				
 		for(var i = 0; i < matrix.length; i++){
 			
 			for(var j = 0; j < matrix[i].length; j++){
@@ -105,7 +109,8 @@ function brainOrientationRenderer(brainDataObject, brainDataCallback, canvasObje
 				//function are the fillStyleCallback and the fillRect call
 				//this eliminates calling anything that's close to zero, speeding
 				//up the loop by about 60ms on average.
-				if( matrix[i][j] < 1 && matrix[i][j] > -1){
+				if( (matrix[i][j] < 1 && matrix[i][j] > -1) || 
+					matrix[i][j] < threshold){
 					continue;
 				}
 				contextObject.fillStyle = fillStyleCallback.apply(

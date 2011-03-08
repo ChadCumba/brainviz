@@ -94,6 +94,43 @@ $(window).load(function(){
 			1,
 			'#FF0000' 
 		);
+	/*
+	 * harvest the backgrounds from the DOM
+	 * we're throwing in some null padding here where the png would have been a
+	 * solid color
+	 */
+	var coronal_backgrounds = $('#coronal-backgrounds > img');
+	coronal_backgrounds.splice(0,0, null,null,null,null,null,null);
+	coronal_backgrounds.splice(coronal_backgrounds.length,0,null,null,null,null,null);
+	var sagittal_backgrounds = $('#sagittal-backgrounds > img');
+	sagittal_backgrounds.splice(0,0,null, null, null, null);
+	sagittal_backgrounds.splice(sagittal_backgrounds.length,0,null, null, null,
+		null, null, null, null);
+	var axial_backgrounds = $('#axial-backgrounds > img');
+	axial_backgrounds.splice(0,0,null, null, null, null, null, null, null);
+	
+	viewer.renderers.coronalBackgroundRenderer = 
+		new brainBackgroundImageRenderer(
+			coronal_backgrounds,
+			viewer.canvases.coronalCanvas,
+			null,
+			'#D0D0D0' //light grey
+		);
+		
+	viewer.renderers.sagittalBackgroundRenderer = 
+		new brainBackgroundImageRenderer(
+			sagittal_backgrounds,
+			viewer.canvases.sagittalCanvas,
+			null,
+			'#D0D0D0'
+		);
+	viewer.renderers.axialBackgroundRenderer = 
+		new brainBackgroundImageRenderer(
+			axial_backgrounds,
+			viewer.canvases.axialCanvas,
+			null,
+			'#D0D0D0'
+		);
 
 	//subscribe the listeners to the event handlers
 	viewer.listeners.dispatchRenderingData.subscribe(

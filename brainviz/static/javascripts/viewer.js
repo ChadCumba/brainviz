@@ -24,6 +24,10 @@ var viewer = {
 		 * Takes in a list of renderingGroups and calls displaySlice on the
 		 * renderer in each group with the slice number provided in the group
 		 * 
+		 * This is sort of a down and dirty composite class
+		 * It should likely be refactored to an actual composite, but that 
+		 * can wait for now.
+		 * 
 		 * @param renderingGroups - takes a list of objects, each should 
 		 * 							contain the members slice, renderer, and weight.
 		 * 							Slice is the slice to render, renderer is 
@@ -116,6 +120,9 @@ var viewer = {
 		coronalCrosshairs : null,
 		sagittalCrosshairs : null,
 		axialCrosshairs : null,
+		coronalBackgroundRenderer: null,
+		sagittalBackgroundRenderer : null,
+		axialBackgroundRenderer : null,
 	},
 	
 	textOutput : {
@@ -139,6 +146,9 @@ var viewer = {
 				coronalRenderer : viewer.renderers.coronalRenderer,
 				sagittalCrosshairs : viewer.renderers.sagittalCrosshairs,
 				axialCrosshairs : viewer.renderers.axialCrosshairs,
+				coronalBackgroundRenderer : viewer.renderers.coronalBackgroundRenderer,
+				sagittalBackgroundRenderer : viewer.renderers.sagittalBackgroundRenderer,
+				axialBackgroundRenderer : viewer.renderers.axialBackgroundRenderer,
 			},
 			function(event){
 				//offset contains offset.left and offset.top
@@ -169,6 +179,13 @@ var viewer = {
 				});
 
 			
+				viewer.canvases.coronalCanvas.width = 
+					viewer.canvases.coronalCanvas.width;
+				viewer.canvases.sagittalCanvas.width = 
+					viewer.canvases.sagittalCanvas.width;
+				viewer.canvases.axialCanvas.width = 
+					viewer.canvases.axialCanvas.width;
+				
 				/*
 				 * it would be more clear to deliver an object below,
 				 * however many versions of IE do not support for ... in syntax
@@ -214,6 +231,21 @@ var viewer = {
 										relativeX ],
 						renderer : event.data.axialCrosshairs,
 						weight : 2,
+					},
+					{
+						renderArgs : event.data.coronalRenderer.getLastSlice(),
+						renderer : event.data.coronalBackgroundRenderer,
+						weight : 0,
+					},
+					{
+						renderArgs : Math.floor(axSlice),
+						renderer : event.data.axialBackgroundRenderer,
+						weight : 0,
+					},
+					{
+						renderArgs : Math.floor(sagSlice),
+						renderer : event.data.sagittalBackgroundRenderer,
+						weight : 0,
 					}
 					
 				], event);
@@ -228,6 +260,9 @@ var viewer = {
 				coronalRenderer : viewer.renderers.coronalRenderer,
 				sagittalCrosshairs : viewer.renderers.sagittalCrosshairs,
 				axialCrosshairs : viewer.renderers.axialCrosshairs,
+				coronalBackgroundRenderer : viewer.renderers.coronalBackgroundRenderer,
+				sagittalBackgroundRenderer : viewer.renderers.sagittalBackgroundRenderer,
+				axialBackgroundRenderer : viewer.renderers.axialBackgroundRenderer,
 			},
 			function(event){
 				//offset contains offset.left and offset.top
@@ -256,6 +291,12 @@ var viewer = {
 					relativeX + '&clickY=' +relativeY
 				});
 
+				viewer.canvases.coronalCanvas.width = 
+					viewer.canvases.coronalCanvas.width;
+				viewer.canvases.sagittalCanvas.width = 
+					viewer.canvases.sagittalCanvas.width;
+				viewer.canvases.axialCanvas.width = 
+					viewer.canvases.axialCanvas.width;
 				
 				$(viewer.textOutput.coordinateObject).html(
 					Math.floor(corSlice)+" "
@@ -301,8 +342,23 @@ var viewer = {
 									* event.data.sagittalRenderer.pixelSize ],
 						renderer : event.data.axialCrosshairs,
 						weight : 2,
+					},
+					{
+						renderArgs : Math.floor(corSlice),
+						renderer : event.data.coronalBackgroundRenderer,
+						weight : 0,
+					},
+					{
+						renderArgs : Math.floor(axSlice),
+						renderer : event.data.axialBackgroundRenderer,
+						weight : 0,
+					},
+					{
+						renderArgs : event.data.sagittalRenderer.getLastSlice(),
+						renderer : event.data.sagittalBackgroundRenderer,
+						weight : 0,
 					}
-					
+										
 				], event);
 			}
 		);
@@ -315,6 +371,9 @@ var viewer = {
 				coronalRenderer : viewer.renderers.coronalRenderer,
 				sagittalCrosshairs : viewer.renderers.sagittalCrosshairs,
 				axialCrosshairs : viewer.renderers.axialCrosshairs,
+				coronalBackgroundRenderer : viewer.renderers.coronalBackgroundRenderer,
+				sagittalBackgroundRenderer : viewer.renderers.sagittalBackgroundRenderer,
+				axialBackgroundRenderer : viewer.renderers.axialBackgroundRenderer,
 			},
 			function(event){
 				//offset contains offset.left and offset.top
@@ -344,7 +403,13 @@ var viewer = {
 					event.data.axialRenderer.getLastSlice() + '&clickX=' +
 					relativeX + '&clickY=' +relativeY
 				});
-
+	
+				viewer.canvases.coronalCanvas.width = 
+					viewer.canvases.coronalCanvas.width;
+				viewer.canvases.sagittalCanvas.width = 
+					viewer.canvases.sagittalCanvas.width;
+				viewer.canvases.axialCanvas.width = 
+					viewer.canvases.axialCanvas.width;
 				
 				viewer.publishers.onAxialChange.deliver([
 					
@@ -383,6 +448,21 @@ var viewer = {
 						renderer : event.data.coronalCrosshairs,
 						weight : 2,
 					},
+					{
+						renderArgs : Math.floor(corSlice),
+						renderer : event.data.coronalBackgroundRenderer,
+						weight : 0,
+					},
+					{
+						renderArgs : Math.floor(sagSlice),
+						renderer : event.data.sagittalBackgroundRenderer,
+						weight : 0,
+					},
+					{
+						renderArgs : event.data.axialRenderer.getLastSlice(),
+						renderer : event.data.axialBackgroundRenderer,
+						weight : 0,
+					}
 					
 					
 				], event);

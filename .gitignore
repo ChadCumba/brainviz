@@ -11,3 +11,4 @@ sqlite.db
 brainviz/static/brainimages/*
 adminpass
 brainviz/settings.py
+*png
