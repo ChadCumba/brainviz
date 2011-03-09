@@ -51,7 +51,7 @@ $(window).load(function(){
 		
 		shade = Math.floor(shade);
 			
-		return "rgb("+shade+","+shade+","+shade+")";
+		return "rgb(255,"+shade+",0)";
 	}
 
 	//load the renderers into the viewer
@@ -162,6 +162,12 @@ $(window).load(function(){
 	
 		switch($_GET['axis']){
 			case "coronal":
+				/*
+				 * it is necessary to render one canvas ahead of the click 
+				 * trigger, even though it will be re-rendered. This is to prime
+				 * the renderer.getLast style functions as they are in heavy 
+				 * use inside the viewer.
+				 */
 				viewer.renderers.coronalRenderer.render(parseInt($_GET['slice']));
 				viewer.renderers.coronalCrosshairs.render(
 					clickEvent.relativeX, clickEvent.relativeY);
@@ -189,6 +195,10 @@ $(window).load(function(){
 			
 			
 	}else{
+		//render some background images
+		viewer.renderers.coronalBackgroundRenderer.render(30);
+		viewer.renderers.sagittalBackgroundRenderer.render(30);
+		viewer.renderers.axialBackgroundRenderer.render(30);
 		//render some default slices
 		viewer.renderers.coronalRenderer.render(30);
 		viewer.renderers.sagittalRenderer.render(30);
@@ -207,5 +217,32 @@ $(window).load(function(){
 			Math.floor(viewer.renderers.axialCrosshairs.getCanvasHeight()/2)
 		);
 	}
+	
+	/*
+	 * create the threshold slider
+	 */
+	 
+	$('#slider').slider({max: viewer.brainImage.getMax(),
+		min : viewer.brainImage.getMin(),
+		change : function(event, ui){
+			viewer.renderers.coronalRenderer.setThreshold(ui.value);
+			viewer.renderers.sagittalRenderer.setThreshold(ui.value);
+			viewer.renderers.axialRenderer.setThreshold(ui.value);
+			viewer.staticFunctions.rerenderAll();
+		},
+		slide : function(event, ui){
+			currentThreshold = viewer.renderers.coronalRenderer.getThreshold();
+			range = currentThreshold - ui.value;
+			range = Math.abs(range);
+			scale = Math.abs(viewer.brainImage.getMax() -
+				viewer.brainImage.getMin());
+			if(range/scale > .1){
+				viewer.renderers.coronalRenderer.setThreshold(ui.value);
+				viewer.renderers.sagittalRenderer.setThreshold(ui.value);
+				viewer.renderers.axialRenderer.setThreshold(ui.value);
+				viewer.staticFunctions.rerenderAll();
+			}
+		}
+	});
 
 });

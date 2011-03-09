@@ -52,8 +52,18 @@ function brainOrientationRenderer(brainDataObject, brainDataCallback, canvasObje
 	
 	var lastSlice = null;
 	
+	var threshold = null;
+	
 	this.getLastSlice = function(){
 		return lastSlice;
+	}
+	
+	this.getThreshold = function(){
+		return threshold;
+	}
+	
+	this.setThreshold = function(newThreshold){
+		threshold = newThreshold;
 	}
 	
 	/*
@@ -128,9 +138,7 @@ function brainOrientationRenderer(brainDataObject, brainDataCallback, canvasObje
 	 * as renderSlice 
 	 */
 	function getSlice(sliceToRetrieve){
-		render2dMatrixToContext.apply(this,
-			[this.getBrainData.apply(this.brainObject, [sliceToRetrieve]), 
-			this.context, this.pixelSize, this.fillCallback] );
+		renderSlice.apply(this,[sliceToRetrieve]);
 	};
 	/*
 	 * @param sliceToRender - int desscribing the slice to render
@@ -140,8 +148,8 @@ function brainOrientationRenderer(brainDataObject, brainDataCallback, canvasObje
 	function renderSlice(sliceToRender){
 		
 		render2dMatrixToContext.apply(this,
-			[this.getBrainData.apply(this.brainObject, [sliceToRetrieve]), 
-			this.context, this.pixelSize, this.fillCallback ])
+			[this.getBrainData.apply(this.brainObject, [sliceToRender]), 
+			this.context, this.pixelSize, this.fillCallback, threshold])
 		this.renderedSlices.push(sliceToRender);
 	};
 	/*

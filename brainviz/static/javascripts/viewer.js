@@ -1,4 +1,7 @@
-
+/*
+ * this was originally only meant to be a namespace, but has since mutated into
+ * an almost complete class on its own. It is now in need of some refactoring
+ */
 var viewer = {
 	
 	/*
@@ -471,6 +474,7 @@ var viewer = {
 	},
 	
 	staticFunctions :{
+		
 		resolveCrosshairCoords: function(canvas, event){
 			var offset = $(canvas).offset();
 			//minus one on both of these as they are to represent slices, 
@@ -485,6 +489,13 @@ var viewer = {
 				relativeY = event.pageY - offset.top - 1;
 			}
 			return {'relativeX' : relativeX, 'relativeY' : relativeY};
+		},
+		
+		rerenderAll : function() {
+			clickEvent = $.Event('click');
+			clickEvent.relativeX = viewer.renderers.sagittalCrosshairs.getLastX();
+			clickEvent.relativeY = viewer.renderers.sagittalCrosshairs.getLastY();
+			$(viewer.canvases.sagittalCanvas).trigger(clickEvent);
 		},
 	},
 };

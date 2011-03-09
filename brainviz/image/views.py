@@ -23,11 +23,12 @@ def ImageViewer(request, **kwargs):
           'brainRenderer.js', 'js16Additions.js', 'observer.js',
           'viewer.js', 'brainData.js', 'canvasRenderer.js', 
           'crosshairsRenderer.js', 'interface.js', 'rendererInterface.js',
-          'urlParameters.js', 'eventBindings.js', 'backgroundRenderer.js']
+          'urlParameters.js', 'eventBindings.js', 'backgroundRenderer.js',
+          'jquery-ui-1.8.10.custom.min.js']
 
     js = [ settings.MEDIA_URL + "javascripts/" + file for file in js]
     
-    styles = ['styles.css']
+    styles = ['styles.css', 'jquery-ui-1.8.10.custom.css']
     styles = [ settings.MEDIA_URL + "styles/" + sheet for sheet in styles]
     
     if 'user_name' in kwargs:
