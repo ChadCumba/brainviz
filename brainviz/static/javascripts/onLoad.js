@@ -152,71 +152,57 @@ $(window).load(function(){
 
 	//load the get params (if any) from the url
 	var $_GET = getQueryParams(document.location.search);
-
-	if($_GET['axis'] != undefined && $_GET['slice'] != undefined &&
-		$_GET['clickX'] != undefined && $_GET['clickY'] != undefined){
-		
-		var clickEvent = $.Event('click');
-		clickEvent.relativeX = parseInt($_GET['clickX']);
-		clickEvent.relativeY = parseInt($_GET['clickY']);
 	
-		switch($_GET['axis']){
-			case "coronal":
-				/*
-				 * it is necessary to render one canvas ahead of the click 
-				 * trigger, even though it will be re-rendered. This is to prime
-				 * the renderer.getLast style functions as they are in heavy 
-				 * use inside the viewer.
-				 */
-				viewer.renderers.coronalRenderer.render(parseInt($_GET['slice']));
-				viewer.renderers.coronalCrosshairs.render(
-					clickEvent.relativeX, clickEvent.relativeY);
-					
-				$(viewer.canvases.coronalCanvas).trigger(clickEvent);
-				break;
-			case "sagittal":
-				viewer.renderers.sagittalRenderer.render(parseInt($_GET['slice']));
-				viewer.renderers.sagittalCrosshairs.render(
-					clickEvent.relativeX,clickEvent.relativeY);
-					
-				$(viewer.canvases.sagittalCanvas).trigger(clickEvent);
-				
-				break;
-			case "axial":
-				viewer.renderers.axialRenderer.render(parseInt($_GET['slice']));
-				viewer.renderers.axialCrosshairs.render(
-					clickEvent.relativeX,clickEvent.relativeY);
-					
-				$(viewer.canvases.axialCanvas).trigger(clickEvent);
-				break;
-			default:
-				break;
-		}
-			
-			
-	}else{
-		//render some background images
-		viewer.renderers.coronalBackgroundRenderer.render(30);
-		viewer.renderers.sagittalBackgroundRenderer.render(30);
-		viewer.renderers.axialBackgroundRenderer.render(30);
-		//render some default slices
-		viewer.renderers.coronalRenderer.render(30);
-		viewer.renderers.sagittalRenderer.render(30);
-		viewer.renderers.axialRenderer.render(30);
-		//render the default crosshair positions
-		viewer.renderers.coronalCrosshairs.render(
-			Math.floor(viewer.renderers.coronalCrosshairs.getCanvasWidth()/2),
-			Math.floor(viewer.renderers.coronalCrosshairs.getCanvasHeight()/2)
-		);
-		viewer.renderers.sagittalCrosshairs.render(
-			Math.floor(viewer.renderers.sagittalCrosshairs.getCanvasWidth()/2),
-			Math.floor(viewer.renderers.sagittalCrosshairs.getCanvasHeight()/2)
-		);
-		viewer.renderers.axialCrosshairs.render(
-			Math.floor(viewer.renderers.axialCrosshairs.getCanvasWidth()/2),
-			Math.floor(viewer.renderers.axialCrosshairs.getCanvasHeight()/2)
-		);
+	if($_GET['axis'] == undefined && $_GET['slice'] == undefined &&
+		$_GET['clickX'] == undefined && $_GET['clickY'] == undefined){
+		
+		$_GET['axis'] = 'coronal';
+		$_GET['slice'] = 30;
+		$_GET['clickX'] = 120;
+		$_GET['clickY'] = 144;
+		
 	}
+
+			
+	var clickEvent = $.Event('click');
+	clickEvent.relativeX = parseInt($_GET['clickX']);
+	clickEvent.relativeY = parseInt($_GET['clickY']);
+
+	switch($_GET['axis']){
+		case "coronal":
+			/*
+			 * it is necessary to render one canvas ahead of the click 
+			 * trigger, even though it will be re-rendered. This is to prime
+			 * the renderer.getLast style functions as they are in heavy 
+			 * use inside the viewer.
+			 */
+			viewer.renderers.coronalRenderer.render(parseInt($_GET['slice']));
+			viewer.renderers.coronalCrosshairs.render(
+				clickEvent.relativeX, clickEvent.relativeY);
+				
+			$(viewer.canvases.coronalCanvas).trigger(clickEvent);
+			break;
+		case "sagittal":
+			viewer.renderers.sagittalRenderer.render(parseInt($_GET['slice']));
+			viewer.renderers.sagittalCrosshairs.render(
+				clickEvent.relativeX,clickEvent.relativeY);
+				
+			$(viewer.canvases.sagittalCanvas).trigger(clickEvent);
+			
+			break;
+		case "axial":
+			viewer.renderers.axialRenderer.render(parseInt($_GET['slice']));
+			viewer.renderers.axialCrosshairs.render(
+				clickEvent.relativeX,clickEvent.relativeY);
+				
+			$(viewer.canvases.axialCanvas).trigger(clickEvent);
+			break;
+		default:
+			break;
+	}
+			
+			
+	
 	
 	/*
 	 * create the threshold slider
@@ -237,12 +223,17 @@ $(window).load(function(){
 			scale = Math.abs(viewer.brainImage.getMax() -
 				viewer.brainImage.getMin());
 			if(range/scale > .1){
+				//if there is more than a 10% change in the threshold,
+				//rerender with the new value to give the illusion of 
+				//responsiveness 
 				viewer.renderers.coronalRenderer.setThreshold(ui.value);
 				viewer.renderers.sagittalRenderer.setThreshold(ui.value);
 				viewer.renderers.axialRenderer.setThreshold(ui.value);
 				viewer.staticFunctions.rerenderAll();
 			}
-		}
+		},
+		value : viewer.brainImage.getMin(),
+		orientation: 'vertical',
 	});
 
 });

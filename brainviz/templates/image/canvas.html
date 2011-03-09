@@ -7,20 +7,41 @@
 {% endblock %}
 
 {% block content %}
-	<canvas id="sagittal" width="240" height="240"></canvas>
-	<canvas id="coronal" width="288" height="240"></canvas>
-	<canvas id="axial" width="240" height="288"></canvas>
-	<br />
-	<div id="coords" class="plaintext data">
-		<p>
-		</p>
+	<div id="brain-viewer">
+		<div id="sagittal-container" class="viewer brain-image">
+			<canvas id="sagittal" width="240" height="240"></canvas>
+		</div>
+		<div id="coronal-container" class="viewer brain-image">
+			<canvas id="coronal" width="288" height="240"></canvas>
+		</div>
+		<div id="axial-container" class="viewer brain-image">
+			<canvas id="axial" width="240" height="288"></canvas>
+		</div>
+		<div id="metadata-container" class="viewer data">
+			<div class="data wrapper-left">
+				<div id="coords" class="plaintext data">
+				Location:
+					<p>
+					</p>
+				</div>
+				<div id="voxel-data" class="plaintext data">
+				Value:
+					<p></p>
+				</div>
+			</div>
+			<div class="data wrapper-right">
+				Threshold
+				<div id="slider" class="widget">
+					
+				</div>
+			</div>
+		</div>
 	</div>
-	<div id="voxel-data" class="plaintext data">
-		<p></p>
-	</div>
+	
 	<div id="permanent-url" class="plaintext url">
 		<a href=""></a>
 	</div>
+	
 	<div id="coronal-backgrounds" class="hidden">
 		{% for image in coronal_backgrounds %}
 			<img src="{{image}}" class="hidden image">
@@ -35,9 +56,6 @@
 		{% for image in axial_backgrounds %}
 			<img src="{{image}}" class="hidden image">
 		{% endfor %}
-	</div>
-	<div id="slider" class="widget">
-		
 	</div>
 	{{content}}
 {% endblock %}

@@ -4,6 +4,12 @@
  */
 var viewer = {
 	
+	constants : {
+		coordinateMultiplier : 1.5,
+		smallDimension : 91,
+		largeDimension : 109,
+	},
+	
 	/*
 	 * functions that publish data for events
 	 */
@@ -171,9 +177,12 @@ var viewer = {
 				
 				
 				viewer.publishers.onCrosshairChange.deliver({
-					'coordX' : event.data.coronalRenderer.getLastSlice(),
-					'coordY' : Math.floor(sagSlice),
-					'coordZ' : Math.floor(axSlice),
+					'coordX' : Math.floor(event.data.coronalRenderer.getLastSlice() *
+						viewer.constants.coordinateMultiplier),
+					'coordY' : Math.floor(relativeX * (viewer.constants.largeDimension /
+						viewer.canvases.coronalCanvas.width)),
+					'coordZ' : Math.floor(relativeY * (viewer.constants.smallDimension / 
+						viewer.canvases.coronalCanvas.height)),
 					'voxelValue' : voxelValue,
 					'url' :	window.location.protocol + "//" + window.location.host + 
 					window.location.pathname + "?axis=coronal&slice=" + 
@@ -284,9 +293,12 @@ var viewer = {
 					[ Math.floor(axSlice)];
 				
 				viewer.publishers.onCrosshairChange.deliver({
-					'coordX' : Math.floor(corSlice),
-					'coordY' : event.data.sagittalRenderer.getLastSlice(),
-					'coordZ' : Math.floor(axSlice),
+					'coordX' : Math.floor(relativeX * (viewer.constants.smallDimension /
+						viewer.canvases.sagittalCanvas.width)),
+					'coordY' : Math.floor(event.data.sagittalRenderer.getLastSlice() * 
+						viewer.constants.coordinateMultiplier),
+					'coordZ' : Math.floor(relativeY * (viewer.constants.smallDimension /
+						viewer.canvases.sagittalCanvas.height)),
 					'voxelValue' : voxelValue,
 					'url' :	window.location.protocol + "//" + window.location.host + 
 					window.location.pathname + "?axis=sagittal&slice=" + 
@@ -301,13 +313,7 @@ var viewer = {
 				viewer.canvases.axialCanvas.width = 
 					viewer.canvases.axialCanvas.width;
 				
-				$(viewer.textOutput.coordinateObject).html(
-					Math.floor(corSlice)+" "
-					+event.data.sagittalRenderer.getLastSlice()+" "
-					+Math.floor(axSlice)				
-				);
-				
-				$(viewer.textOutput.voxelObject).html(voxelValue);
+			
 				
 				viewer.publishers.onSagittalChange.deliver([
 					
@@ -397,9 +403,12 @@ var viewer = {
 					[event.data.axialRenderer.getLastSlice()];
 				
 				viewer.publishers.onCrosshairChange.deliver({
-					'coordX' : Math.floor(corSlice),
-					'coordY' : Math.floor(sagSlice),
-					'coordZ' : event.data.axialRenderer.getLastSlice(),
+					'coordX' : Math.floor(relativeX * (viewer.constants.smallDimension /
+						viewer.canvases.axialCanvas.width)),
+					'coordY' : Math.floor(relativeY * (viewer.constants.largeDimension /
+						viewer.canvases.axialCanvas.height)),
+					'coordZ' : Math.floor(event.data.axialRenderer.getLastSlice() *
+						viewer.constants.coordinateMultiplier),
 					'voxelValue' : voxelValue,
 					'url' :	window.location.protocol + "//" + window.location.host + 
 					window.location.pathname + "?axis=axial&slice=" + 
