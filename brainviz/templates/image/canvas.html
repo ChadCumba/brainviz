@@ -7,7 +7,9 @@
 {% endblock %}
 
 {% block content %}
+	
 	<div id="brain-viewer">
+		<img id ="loading-image" src="{{STATIC_URL}}viewerimages/spinner.gif" class="hidden">
 		<div id="sagittal-container" class="viewer brain-image">
 			<canvas id="sagittal" width="240" height="240"></canvas>
 		</div>
@@ -26,6 +28,10 @@
 				</div>
 				<div id="voxel-data" class="plaintext data">
 				Value:
+					<p></p>
+				</div>
+				<div id="threshold-value" class="plaintext data">
+				Current Threshold:
 					<p></p>
 				</div>
 			</div>

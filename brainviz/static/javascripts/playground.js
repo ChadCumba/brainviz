@@ -63,3 +63,65 @@ function greyScaleFill( pixelValue){
 			
 }
 
+function makeBackgrounds(){
+	
+	for(var i =0; i < 60; i++){
+		viewer.renderers.coronalBackgroundRenderer.render(i);
+		viewer.renderers.axialBackgroundRenderer.render(i);
+		viewer.renderers.sagittalBackgroundRenderer.render(i);
+        viewer.renderers.sagittalRenderer.render(i);
+        viewer.renderers.coronalRenderer.render(i);
+        viewer.renderers.axialRenderer.render(i);
+        data_string = viewer.canvases.sagittalCanvas.toDataURL();
+        $.ajax({
+            async: false,
+            global: false,
+            url: 'http://localhost:8000/image/save',
+            cache: false,
+            type: 'POST',
+            data: {'image_string' : data_string,
+                     'image_name': 'sagittal' + i+'.png'
+            }
+        });
+        data_string = viewer.canvases.coronalCanvas.toDataURL();
+        $.ajax({
+            async: false,
+            global: false,
+            url: 'http://localhost:8000/image/save',
+            cache: false,
+            type: 'POST',
+            data: {'image_string' : data_string,
+                     'image_name': 'coronal' + i+'.png'
+            }
+        });
+        data_string = viewer.canvases.axialCanvas.toDataURL();
+        $.ajax({
+            async: false,
+            global: false,
+            url: 'http://localhost:8000/image/save',
+            cache: false,
+            type: 'POST',
+            data: {'image_string' : data_string,
+                     'image_name': 'axial' + i+'.png'
+            }
+        });
+	}
+	
+	for(var i = 60; i < 72; i++){
+		viewer.renderers.sagittalBackgroundRenderer.render(i);
+        viewer.renderers.sagittalRenderer.render(i);
+        data_string = viewer.canvases.sagittalCanvas.toDataURL();
+        $.ajax({
+            async: false,
+            global: false,
+            url: 'http://localhost:8000/image/save',
+            cache: false,
+            type: 'POST',
+            data: {'image_string' : data_string,
+                     'image_name': 'sagittal' + i+'.png'
+            }
+        });
+
+    }
+}
+

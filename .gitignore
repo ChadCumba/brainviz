@@ -12,3 +12,4 @@ brainviz/static/brainimages/*
 adminpass
 brainviz/settings.py
 *png
+brainviz/static/viewerimages/spinner.gif

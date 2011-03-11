@@ -80,6 +80,7 @@ def ImageViewer(request, **kwargs):
          'coronal_backgrounds': coronal_backgrounds,
          'sagittal_backgrounds' : sagittal_backgrounds,
          'axial_backgrounds' : axial_backgrounds,
+         'STATIC_URL' : settings.MEDIA_URL,
          },
         context_instance = RequestContext(request))
 

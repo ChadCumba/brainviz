@@ -1,3 +1,8 @@
+/*
+ * @TODO as this application has grown, the onload function has turned into a 
+ * defacto constructor for the viewer singleton. We need to refactor this into
+ * a constructor for the singleton instead of this bit of a mess
+ */
 $(window).load(function(){
 	
 	/* global viewer: false, image_id_to_load: false, Math: false,
@@ -16,19 +21,23 @@ $(window).load(function(){
 			imageUrl = imageUrl + "/" + image_id_to_load;
 		}
 	}
+	$('#loading-image').removeClass('hidden').attr('style', 
+		'position:relative;top:300px;');
 	
-	var background = loadJsonDataFromLocation(imageUrl);
+	var heatMap = loadJsonDataFromLocation(imageUrl);
 	
-	for(var i = 0; i < background.data.length; i++){
-		background.data[i].reverse();
-		for(var j = 0; j < background.data[i].length; j++){
-			background.data[i][j].reverse();
+	$('#loading-image').hide();
+	
+	for(var i = 0; i < heatMap.data.length; i++){
+		heatMap.data[i].reverse();
+		for(var j = 0; j < heatMap.data[i].length; j++){
+			heatMap.data[i][j].reverse();
 		}
 	}
 	
 	//load the data into the viewer
-	viewer.brainImage = new brainData(background.data, background.max,
-										background.min);
+	viewer.brainImage = new brainData(heatMap.data, heatMap.max,
+										heatMap.min);
 	
 	//load the drawing canvases into the viewer
 	viewer.canvases.coronalCanvas = $('canvas#coronal').first()[0]
@@ -39,6 +48,7 @@ $(window).load(function(){
 	viewer.textOutput.coordinateObject = $('#coords > p').first()[0];
 	viewer.textOutput.voxelObject = $('#voxel-data > p').first()[0];
 	viewer.textOutput.urlObject = $('#permanent-url > a').first()[0];
+	viewer.textOutput.thresholdObject = $('#threshold-value > p').first()[0];
 	
 	
 	var backgroundFillCallback = function(pixel){
@@ -80,19 +90,19 @@ $(window).load(function(){
 		new crosshairsRenderer(
 			viewer.canvases.coronalCanvas,
 			1,
-			'#FF0000' //red
+			'#FFFFFF' //white
 		);
 	viewer.renderers.sagittalCrosshairs = 
 		new crosshairsRenderer(
 			viewer.canvases.sagittalCanvas,
 			1,
-			'#FF0000' 
+			'#FFFFFF' 
 		);
 	viewer.renderers.axialCrosshairs = 
 		new crosshairsRenderer(
 			viewer.canvases.axialCanvas,
 			1,
-			'#FF0000' 
+			'#FFFFFF' 
 		);
 	/*
 	 * harvest the backgrounds from the DOM
@@ -100,21 +110,23 @@ $(window).load(function(){
 	 * solid color
 	 */
 	var coronal_backgrounds = $('#coronal-backgrounds > img');
-	coronal_backgrounds.splice(0,0, null,null,null,null,null,null);
+	coronal_backgrounds.splice(0,0, null,null,null,null,null);
 	coronal_backgrounds.splice(coronal_backgrounds.length,0,null,null,null,null,null);
 	var sagittal_backgrounds = $('#sagittal-backgrounds > img');
 	sagittal_backgrounds.splice(0,0,null, null, null, null);
 	sagittal_backgrounds.splice(sagittal_backgrounds.length,0,null, null, null,
-		null, null, null, null);
+		null, null, null);
 	var axial_backgrounds = $('#axial-backgrounds > img');
-	axial_backgrounds.splice(0,0,null, null, null, null, null, null, null);
+	axial_backgrounds.splice(0,0,null, null, null, null, null, null);
+	
 	
 	viewer.renderers.coronalBackgroundRenderer = 
 		new brainBackgroundImageRenderer(
 			coronal_backgrounds,
 			viewer.canvases.coronalCanvas,
 			null,
-			'#D0D0D0' //light grey
+			//'#D0D0D0' //light grey
+			'#000000'
 		);
 		
 	viewer.renderers.sagittalBackgroundRenderer = 
@@ -122,14 +134,16 @@ $(window).load(function(){
 			sagittal_backgrounds,
 			viewer.canvases.sagittalCanvas,
 			null,
-			'#D0D0D0'
+			//'#D0D0D0'
+			'#000000'
 		);
 	viewer.renderers.axialBackgroundRenderer = 
 		new brainBackgroundImageRenderer(
 			axial_backgrounds,
 			viewer.canvases.axialCanvas,
 			null,
-			'#D0D0D0'
+			//'#D0D0D0'
+			'#000000'
 		);
 
 	//subscribe the listeners to the event handlers
@@ -145,6 +159,9 @@ $(window).load(function(){
 	viewer.listeners.updateTextDisplay.subscribe(
 		viewer.publishers.onCrosshairChange
 	);
+	viewer.listeners.updateThresholds.subscribe(
+		viewer.publishers.onThresholdChange
+	);
 
 	
 	//sets the click handling bindings
@@ -153,14 +170,18 @@ $(window).load(function(){
 	//load the get params (if any) from the url
 	var $_GET = getQueryParams(document.location.search);
 	
-	if($_GET['axis'] == undefined && $_GET['slice'] == undefined &&
-		$_GET['clickX'] == undefined && $_GET['clickY'] == undefined){
+	/*
+	 * these should be broken up to set the get data individually
+	 */
+	if($_GET['axis'] == undefined || $_GET['slice'] == undefined ||
+		$_GET['clickX'] == undefined || $_GET['clickY'] == undefined ||
+		$_GET['threshold'] == undefined){
 		
 		$_GET['axis'] = 'coronal';
 		$_GET['slice'] = 30;
 		$_GET['clickX'] = 120;
 		$_GET['clickY'] = 144;
-		
+		$_GET['threshold'] = viewer.brainImage.getMin();
 	}
 
 			
@@ -202,19 +223,17 @@ $(window).load(function(){
 	}
 			
 			
-	
+	viewer.publishers.onThresholdChange.deliver($_GET['threshold']);
 	
 	/*
 	 * create the threshold slider
+	 * this should likely live inside the viewer singleton
 	 */
 	 
 	$('#slider').slider({max: viewer.brainImage.getMax(),
 		min : viewer.brainImage.getMin(),
 		change : function(event, ui){
-			viewer.renderers.coronalRenderer.setThreshold(ui.value);
-			viewer.renderers.sagittalRenderer.setThreshold(ui.value);
-			viewer.renderers.axialRenderer.setThreshold(ui.value);
-			viewer.staticFunctions.rerenderAll();
+			viewer.publishers.onThresholdChange.deliver(ui.value);
 		},
 		slide : function(event, ui){
 			currentThreshold = viewer.renderers.coronalRenderer.getThreshold();
@@ -226,13 +245,10 @@ $(window).load(function(){
 				//if there is more than a 10% change in the threshold,
 				//rerender with the new value to give the illusion of 
 				//responsiveness 
-				viewer.renderers.coronalRenderer.setThreshold(ui.value);
-				viewer.renderers.sagittalRenderer.setThreshold(ui.value);
-				viewer.renderers.axialRenderer.setThreshold(ui.value);
-				viewer.staticFunctions.rerenderAll();
+				viewer.publishers.onThresholdChange.deliver(ui.value);
 			}
 		},
-		value : viewer.brainImage.getMin(),
+		value : $_GET['threshold'],
 		orientation: 'vertical',
 	});
 

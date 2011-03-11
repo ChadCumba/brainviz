@@ -8,4 +8,5 @@ urlpatterns = patterns('',
     (r'^getimage/(?P<image_id>\d+)$', 'brainviz.image.views.ImageData'),
     (r'^getimage$', 'brainviz.image.views.ImageData'),
     (r'^image_list$','brainviz.image.views.ImageListing'),
+    (r'^save$', 'brainviz.image.views.SaveImageString'),
 )

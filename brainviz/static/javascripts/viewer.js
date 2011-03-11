@@ -21,6 +21,7 @@ var viewer = {
 		onSagittalRenderingComplete : new Publisher(),
 		onAxialRenderingComplete : new Publisher(),
 		onCrosshairChange : new Publisher(),
+		onThresholdChange : new Publisher(),
 	},
 	
 	/*
@@ -95,7 +96,19 @@ var viewer = {
 			
 			$(viewer.textOutput.urlObject).html('Permalink to this page');
 			$(viewer.textOutput.urlObject).attr('href',data.url);
+			
 		},
+		
+		updateThresholds : function(data){
+			if (data != null){
+				viewer.threshold = data;
+				viewer.renderers.coronalRenderer.setThreshold(data);
+				viewer.renderers.sagittalRenderer.setThreshold(data);
+				viewer.renderers.axialRenderer.setThreshold(data);
+				viewer.staticFunctions.rerenderAll();
+				$(viewer.textOutput.thresholdObject).html(data);
+			}
+		}
 	
 	},
 	
@@ -138,7 +151,10 @@ var viewer = {
 		coordinateObject : null,
 		voxelObject : null,
 		urlObject : null,
+		thresholdObject: null,
 	},
+	
+	threshold : null,
 	
 	/*
 	 * these are the onclick bindings
@@ -187,7 +203,8 @@ var viewer = {
 					'url' :	window.location.protocol + "//" + window.location.host + 
 					window.location.pathname + "?axis=coronal&slice=" + 
 					event.data.coronalRenderer.getLastSlice() + '&clickX=' +
-					relativeX + '&clickY=' +relativeY
+					relativeX + '&clickY=' +relativeY + '&threshold=' +
+					viewer.threshold
 				});
 
 			
@@ -303,7 +320,8 @@ var viewer = {
 					'url' :	window.location.protocol + "//" + window.location.host + 
 					window.location.pathname + "?axis=sagittal&slice=" + 
 					event.data.sagittalRenderer.getLastSlice() + '&clickX=' +
-					relativeX + '&clickY=' +relativeY
+					relativeX + '&clickY=' +relativeY + '&threshold=' +
+					viewer.threshold
 				});
 
 				viewer.canvases.coronalCanvas.width = 
@@ -413,7 +431,8 @@ var viewer = {
 					'url' :	window.location.protocol + "//" + window.location.host + 
 					window.location.pathname + "?axis=axial&slice=" + 
 					event.data.axialRenderer.getLastSlice() + '&clickX=' +
-					relativeX + '&clickY=' +relativeY
+					relativeX + '&clickY=' +relativeY + '&threshold=' +
+					viewer.threshold
 				});
 	
 				viewer.canvases.coronalCanvas.width = 
