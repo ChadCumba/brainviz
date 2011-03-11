@@ -90,7 +90,7 @@ var viewer = {
 		updateTextDisplay : function(data){
 
 			$(viewer.textOutput.coordinateObject).html(
-				data.coordX+" "+data.coordY+" "+data.coordZ);
+				"X: "+data.coordX+" Y: "+data.coordY+" Z: "+data.coordZ);
 			
 			$(viewer.textOutput.voxelObject).html(data.voxelValue);
 			
@@ -195,9 +195,11 @@ var viewer = {
 				viewer.publishers.onCrosshairChange.deliver({
 					'coordX' : Math.floor(event.data.coronalRenderer.getLastSlice() *
 						viewer.constants.coordinateMultiplier),
-					'coordY' : Math.floor(relativeX * (viewer.constants.largeDimension /
+					'coordY' : viewer.constants.largeDimension - 
+						Math.floor(relativeX * (viewer.constants.largeDimension /
 						viewer.canvases.coronalCanvas.width)),
-					'coordZ' : Math.floor(relativeY * (viewer.constants.smallDimension / 
+					'coordZ' : viewer.constants.smallDimension - 
+						Math.floor(relativeY * (viewer.constants.smallDimension / 
 						viewer.canvases.coronalCanvas.height)),
 					'voxelValue' : voxelValue,
 					'url' :	window.location.protocol + "//" + window.location.host + 
@@ -312,9 +314,11 @@ var viewer = {
 				viewer.publishers.onCrosshairChange.deliver({
 					'coordX' : Math.floor(relativeX * (viewer.constants.smallDimension /
 						viewer.canvases.sagittalCanvas.width)),
-					'coordY' : Math.floor(event.data.sagittalRenderer.getLastSlice() * 
+					'coordY' : viewer.constants.largeDimension - 
+						Math.floor(event.data.sagittalRenderer.getLastSlice() * 
 						viewer.constants.coordinateMultiplier),
-					'coordZ' : Math.floor(relativeY * (viewer.constants.smallDimension /
+					'coordZ' : viewer.constants.smallDimension - 
+						Math.floor(relativeY * (viewer.constants.smallDimension /
 						viewer.canvases.sagittalCanvas.height)),
 					'voxelValue' : voxelValue,
 					'url' :	window.location.protocol + "//" + window.location.host + 
@@ -423,9 +427,11 @@ var viewer = {
 				viewer.publishers.onCrosshairChange.deliver({
 					'coordX' : Math.floor(relativeX * (viewer.constants.smallDimension /
 						viewer.canvases.axialCanvas.width)),
-					'coordY' : Math.floor(relativeY * (viewer.constants.largeDimension /
+					'coordY' : viewer.constants.largeDimension - 
+						Math.floor(relativeY * (viewer.constants.largeDimension /
 						viewer.canvases.axialCanvas.height)),
-					'coordZ' : Math.floor(event.data.axialRenderer.getLastSlice() *
+					'coordZ' : viewer.constants.smallDimension - 
+						Math.floor(event.data.axialRenderer.getLastSlice() *
 						viewer.constants.coordinateMultiplier),
 					'voxelValue' : voxelValue,
 					'url' :	window.location.protocol + "//" + window.location.host + 

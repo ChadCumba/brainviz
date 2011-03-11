@@ -22,7 +22,7 @@ $(window).load(function(){
 		}
 	}
 	$('#loading-image').removeClass('hidden').attr('style', 
-		'position:relative;top:300px;');
+		'position:relative;top:270px;');
 	
 	var heatMap = loadJsonDataFromLocation(imageUrl);
 	
