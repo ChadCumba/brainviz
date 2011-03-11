@@ -9,7 +9,7 @@
 			{% endif %}
 	{% endfor %}
 	
-	<div class="pagination">
+<div class="pagination">
     <span class="step-links">
         {% if images.has_previous %}
             <a href="?page={{ images.previous_page_number }}">previous</a>
@@ -24,6 +24,6 @@
         {% endif %}
     </span>
 </div>
-
+<a href="/admin">admin</a>
 
 {% endblock %}

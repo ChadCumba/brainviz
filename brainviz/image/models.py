@@ -1,6 +1,5 @@
 import os
 import uuid
-import errno
 import nibabel
 import numpy
 import tempfile
@@ -9,14 +8,14 @@ import json
 from django.db import models
 from django.contrib.auth.models import User
 from image.fields import LargeMatrixField
-from django.db.models.signals import post_save
-from brainviz.image.signals import resize_image
 from django.conf import settings
 from django.core.files.storage import Storage, FileSystemStorage
-from django.core.files.move import file_move_safe
-from django.core.files import locks, File
+from django.core.files import File
 from image.transforms import resize
 
+#Brain data storage object
+#the _save function is specifically overridden to alter the nifti file 
+#and save it as json
 class BrainDataStorage(Storage):
     
     def _open(self, name, mode='rb'):
@@ -84,8 +83,10 @@ class BrainDataStorage(Storage):
         file_system = FileSystemStorage()
         return file_system.url(name)
 
+#this strips out the user supplied name and slots in a UUID for the filename.
+#this is to prevent a bug that can occur when loading a image into nibabel
+#that has a weird file extension.
 def get_brain_image_path(instance, filename):
-    (root, ext) = os.path.splitext(filename)
     storage_directory = os.path.join(settings.MEDIA_ROOT, 'brainimages')
     
     unique_name = uuid.uuid4().hex

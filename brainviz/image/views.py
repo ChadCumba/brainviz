@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 import nibabel, json
 from django.utils.decorators import decorator_from_middleware
 from django.middleware.gzip import GZipMiddleware
-from numpy import nan_to_num, ndarray, array, float32
+from numpy import ndarray
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from base64 import b64decode
 from os import path, listdir
@@ -36,11 +36,11 @@ def ImageViewer(request, **kwargs):
     if 'user_name' in kwargs:
         user_name = kwargs['user_name']
     else:
-        user_name = 'chad'
+        user_name = None
     if 'image_slug' in kwargs:
         image_slug = kwargs['image_slug']
     else:
-        image_slug = '654'
+        image_slug = None
     
     #find the image they requested based on the slugs passed in
     image_queryset = ThreeDimensional.objects.filter(brain_slug=image_slug)
