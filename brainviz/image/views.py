@@ -28,6 +28,8 @@ def ImageViewer(request, **kwargs):
 
     js = [ settings.MEDIA_URL + "javascripts/" + file for file in js]
     
+    
+    
     styles = ['styles.css', 'jquery-ui-1.8.10.custom.css']
     styles = [ settings.MEDIA_URL + "styles/" + sheet for sheet in styles]
     
@@ -40,6 +42,7 @@ def ImageViewer(request, **kwargs):
     else:
         image_slug = '654'
     
+    #find the image they requested based on the slugs passed in
     image_queryset = ThreeDimensional.objects.filter(brain_slug=image_slug)
     if image_queryset.count() is not 1:
         image_owner = User.objects.get(username=user_name)
@@ -48,10 +51,13 @@ def ImageViewer(request, **kwargs):
             return render_to_response('generic/base.html',
                         {'content': "Something went wrong"},
                         context_instance = RequestContext(request))
-    
+            
+    #at this point image_queryset should be a list that contains only 1 item
+    #and that item should be an image model
     
     image_id = image_queryset[0].id
     
+    #these create lists of all the backgrounds for the brain images
     coronal_backgrounds = listdir(
         path.join(settings.MEDIA_ROOT, 'backgrounds', 'coronal'))
     coronal_backgrounds = [ settings.MEDIA_URL + "backgrounds/coronal/" + file
@@ -112,23 +118,8 @@ def ImageData(request, **kwargs):
         image_id = 1
 
     image = ThreeDimensional.objects.get(id = image_id)
-    image_handle = nibabel.load(image.brain_image.file.name)
-    image_data = image_handle.get_data() 
-    image_list_data = image_data.tolist()
     
-    #for some reason ndarray.max returns an ndarray with 1 member
-    #which is a numpy.flaot32. this converts all that to a regular python float    
-    max = ndarray.max(image_data).tolist()
-    min = ndarray.min(image_data).tolist()
-    
-    json_object = {
-                   'data' : image_list_data,
-                   'max' : max,
-                   'min' : min,
-    }
-
-    
-    json_data = json.dumps(json_object)
+    json_data = image.brain_image.readlines()
     
     return HttpResponse(json_data, mimetype='application/json')
 

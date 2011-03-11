@@ -9,8 +9,6 @@ def resize_image(sender, **kwargs):
     from nibabel import save as nisave
     from image.transforms import resize
     from numpy import float32, eye, around, nan_to_num
-    import gzip, shutil
-    from os.path import splitext
     from os import unlink
     
     #if it's not the first time this is created, do not resize
