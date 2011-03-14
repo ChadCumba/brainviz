@@ -9,7 +9,9 @@ $(window).load(function(){
 	 * loadJsonDataFromLocation: false, brainData: false
 	 */ 
 	
-	
+	//show the loading image twirling thing
+	$('#loading-image').removeClass('hidden').attr('style', 
+		'position:relative;top:270px;');
 	
 	var imageUrl = '/image/getimage';
 	
@@ -24,14 +26,7 @@ $(window).load(function(){
 		}
 	}
 	
-	$('#loading-image').removeClass('hidden').attr('style', 
-		'position:relative;top:270px;');
-	
 
-	
-	$('#loading-image').hide();
-	
-	
 	var canvasObjects = {};
 	var textObjects = {};
 	var backgrounds = {};
@@ -48,7 +43,6 @@ $(window).load(function(){
 	textObjects.voxel = $('#voxel-data > p').first()[0];
 	textObjects.url = $('#permanent-url > a').first()[0];
 	textObjects.threshold = $('#threshold-value > p').first()[0];
-	
 	
 	
 	
@@ -69,7 +63,8 @@ $(window).load(function(){
 	/*
 	 * harvest the backgrounds from the DOM
 	 * we're throwing in some null padding here where the png would have been a
-	 * solid color
+	 * solid color as the renderer's default is to just render black if there
+	 * is a null background. This saves us from loading a png, and painting it.
 	 */
 	backgrounds.coronal = $('#coronal-backgrounds > img');
 	backgrounds.coronal.splice(0,0, null,null,null,null,null);
@@ -105,6 +100,7 @@ $(window).load(function(){
 	thresholds.value = $_GET['threshold'];
 	thresholds.orientation = "vertical";
 	
+	//the viewer constructor
 	viewer.init(imageUrl, canvasObjects, textObjects, thresholds,
 		backgroundFillCallback,	backgrounds);
 
@@ -116,9 +112,9 @@ $(window).load(function(){
 	switch($_GET['axis']){
 		case "coronal":
 			/*
-			 * it is necessary to render one canvas ahead of the click 
-			 * trigger, even though it will be re-rendered. This is to prime
-			 * the renderer.getLast style functions as they are in heavy 
+			 * it is necessary to render the canvas to be clicked ahead of the  
+			 * click trigger, even though it will be re-rendered. This is to 
+			 * prime the renderer.getLast style functions as they are in heavy 
 			 * use inside the viewer.
 			 */
 			viewer.renderers.coronalRenderer.render(parseInt($_GET['slice']));
@@ -152,7 +148,7 @@ $(window).load(function(){
 		viewer.publishers.onThresholdChange.deliver($_GET['threshold']);
 	}
 	
-	
-	
+	//hide the spinny loader gif
+	$('#loading-image').hide();
 
 });

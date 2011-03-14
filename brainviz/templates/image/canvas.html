@@ -11,13 +11,19 @@
 	<div id="brain-viewer">
 		<img id ="loading-image" src="{{STATIC_URL}}viewerimages/spinner.gif" class="hidden">
 		<div id="sagittal-container" class="viewer brain-image">
+			<p class="label top">S</p><p class="label right">R</p>
 			<canvas id="sagittal" width="240" height="240"></canvas>
+			<p class="label left">L</p><p class="label bottom">I</p>
 		</div>
 		<div id="coronal-container" class="viewer brain-image">
+			<p class="label top">S</p><p class="label right">A</p>
 			<canvas id="coronal" width="288" height="240"></canvas>
+			<p class="label left coronal-label">P</p><p class="label bottom">I</p>
 		</div>
 		<div id="axial-container" class="viewer brain-image">
+			<p class="label top">A</p><p class="label right">R</p>
 			<canvas id="axial" width="240" height="288"></canvas>
+			<p class="label left">L</p><p class="label bottom">P</p>
 		</div>
 		<div id="metadata-container" class="viewer data">
 			<div class="data wrapper-left">
