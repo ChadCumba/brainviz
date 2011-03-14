@@ -54,6 +54,7 @@ class BrainDataStorage(Storage):
         javascript_tempfile.open('w')
         javascript_tempfile.writelines(json.dumps(json_data))
         javascript_tempfile.close()
+        #we re-open the file as file_system._save() expects an open file 
         javascript_tempfile.open('r')
         
         (root, ext) = os.path.splitext(image_filename)

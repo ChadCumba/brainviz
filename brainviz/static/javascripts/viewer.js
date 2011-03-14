@@ -4,6 +4,156 @@
  */
 var viewer = {
 	
+	instantiated : false,
+	
+	init: function(imageURL, canvases, texts, thresholds, backgroundFillCallback,
+			backgrounds) {
+		if(this.instantiated){
+			return;
+		}
+		
+		var heatMap = loadJsonDataFromLocation(imageUrl);
+		
+		for(var i = 0; i < heatMap.data.length; i++){
+			heatMap.data[i].reverse();
+			for(var j = 0; j < heatMap.data[i].length; j++){
+				heatMap.data[i][j].reverse();
+			}
+		}
+		
+		//load the data into the viewer
+		this.brainImage = new brainData(heatMap.data, heatMap.max,
+											heatMap.min);
+		
+		//load the drawing canvases into the viewer
+		this.canvases.coronalCanvas = $(canvases.coronal).first()[0]
+		this.canvases.sagittalCanvas = $(canvases.sagittal).first()[0]
+		this.canvases.axialCanvas = $(canvases.axial).first()[0]
+		
+		//load the text output objects into the viewer
+		this.textOutput.coordinateObject = $(texts.coordinates).first()[0];
+		this.textOutput.voxelObject = $(texts.voxel).first()[0];
+		this.textOutput.urlObject = $(texts.url).first()[0];
+		this.textOutput.thresholdObject = $(texts.threshold).first()[0];
+		
+		//load the renderers into the viewer
+		this.renderers.coronalRenderer =
+			new brainOrientationRenderer(
+				this.brainImage,
+				this.brainImage.getCoronalData, 
+				this.canvases.coronalCanvas, 'Coronal', 4,
+				backgroundFillCallback
+			);
+		this.renderers.sagittalRenderer = 		
+			new brainOrientationRenderer(
+				this.brainImage,
+				this.brainImage.getSagittalData,
+				this.canvases.sagittalCanvas, 'Sagittal', 4,
+				backgroundFillCallback
+			);
+		this.renderers.axialRenderer =	
+			new brainOrientationRenderer(
+				this.brainImage,
+				this.brainImage.getAxialData,
+				this.canvases.axialCanvas, 'Axial', 4,
+				backgroundFillCallback
+			);
+		this.renderers.coronalCrosshairs = 
+			new crosshairsRenderer(
+				this.canvases.coronalCanvas,
+				1,
+				'#FFFFFF' //white
+			);
+		this.renderers.sagittalCrosshairs = 
+			new crosshairsRenderer(
+				this.canvases.sagittalCanvas,
+				1,
+				'#FFFFFF' 
+			);
+		this.renderers.axialCrosshairs = 
+			new crosshairsRenderer(
+				this.canvases.axialCanvas,
+				1,
+				'#FFFFFF' 
+			);
+			
+		this.renderers.coronalBackgroundRenderer = 
+			new brainBackgroundImageRenderer(
+				backgrounds.coronal,
+				this.canvases.coronalCanvas,
+				null,
+				'#000000'
+			);
+			
+		this.renderers.sagittalBackgroundRenderer = 
+			new brainBackgroundImageRenderer(
+				backgrounds.sagittal,
+				this.canvases.sagittalCanvas,
+				null,
+				//'#D0D0D0'
+				'#000000'
+			);
+		this.renderers.axialBackgroundRenderer = 
+			new brainBackgroundImageRenderer(
+				backgrounds.axial,
+				this.canvases.axialCanvas,
+				null,
+				'#000000'
+			);
+	
+		//subscribe the listeners to the event handlers
+		this.listeners.dispatchRenderingData.subscribe(
+			this.publishers.onSagittalChange
+		);
+		this.listeners.dispatchRenderingData.subscribe(
+			this.publishers.onAxialChange
+		);
+		this.listeners.dispatchRenderingData.subscribe(
+			this.publishers.onCoronalChange
+		);
+		this.listeners.updateTextDisplay.subscribe(
+			this.publishers.onCrosshairChange
+		);
+		this.listeners.updateThresholds.subscribe(
+			this.publishers.onThresholdChange
+		);
+	
+		
+		//sets the click handling bindings
+		this.setEventBindings();
+		
+		$(thresholds.slider).slider({max: this.brainImage.getMax(),
+			min : this.brainImage.getMin(),
+			value : thresholds.value,
+			orientation: thresholds.orientation,
+		}).bind('slide', {
+			coronalRenderer : this.renderers.coronalRenderer,
+			onThresholdChange : this.publishers.onThresholdChange,
+			brainImage : this.brainImage,
+		},
+			function(event, ui){
+				currentThreshold = event.coronalRenderer.getThreshold();
+				range = currentThreshold - ui.value;
+				range = Math.abs(range);
+				scale = Math.abs(event.brainImage.getMax() -
+					event.brainImage.getMin());
+				if(range/scale > .1){
+					//if there is more than a 10% change in the threshold,
+					//rerender with the new value to give the illusion of 
+					//responsiveness 
+					event.onThresholdChange.deliver(ui.value);
+				}
+		}).bind('slidechange',
+			{
+				onThresholdChange: this.publishers.onThresholdChange,
+			},
+			function(event, ui){
+				event.onThresholdChange.deliver(ui.value);
+			} 
+		);
+		
+	},
+	
 	constants : {
 		coordinateMultiplier : 1.5,
 		smallDimension : 91,
@@ -174,6 +324,8 @@ var viewer = {
 				coronalBackgroundRenderer : viewer.renderers.coronalBackgroundRenderer,
 				sagittalBackgroundRenderer : viewer.renderers.sagittalBackgroundRenderer,
 				axialBackgroundRenderer : viewer.renderers.axialBackgroundRenderer,
+				constants : viewer.constants,
+				staticFunctions : viewer.staticFunctions,
 			},
 			function(event){
 				//offset contains offset.left and offset.top
