@@ -326,10 +326,14 @@ var viewer = {
 				axialBackgroundRenderer : viewer.renderers.axialBackgroundRenderer,
 				constants : viewer.constants,
 				staticFunctions : viewer.staticFunctions,
+				canvases : viewer.canvases,
+				brainImage : viewer.brainImage,
+				publishers : viewer.publishers,
+				threshold : viewer.threshold,
 			},
 			function(event){
 				//offset contains offset.left and offset.top
-				var coords = viewer.staticFunctions.resolveCrosshairCoords(
+				var coords = event.data.staticFunctions.resolveCrosshairCoords(
 					this, event);
 				
 				var relativeX = coords.relativeX;
@@ -338,7 +342,7 @@ var viewer = {
 				var sagSlice = relativeX / event.data.sagittalRenderer.pixelSize;
 				var axSlice = relativeY / event.data.axialRenderer.pixelSize;
 				
-				var voxelValue = viewer.brainImage.data
+				var voxelValue = event.data.brainImage.data
 					[event.data.coronalRenderer.getLastSlice()]
 					[Math.floor(sagSlice)]
 					[Math.floor(axSlice)];
@@ -346,28 +350,28 @@ var viewer = {
 				
 				viewer.publishers.onCrosshairChange.deliver({
 					'coordX' : Math.floor(event.data.coronalRenderer.getLastSlice() *
-						viewer.constants.coordinateMultiplier),
+						event.data.constants.coordinateMultiplier),
 					'coordY' : viewer.constants.largeDimension - 
-						Math.floor(relativeX * (viewer.constants.largeDimension /
-						viewer.canvases.coronalCanvas.width)),
-					'coordZ' : viewer.constants.smallDimension - 
-						Math.floor(relativeY * (viewer.constants.smallDimension / 
-						viewer.canvases.coronalCanvas.height)),
+						Math.floor(relativeX * (event.data.constants.largeDimension /
+						event.data.canvases.coronalCanvas.width)),
+					'coordZ' : event.data.constants.smallDimension - 
+						Math.floor(relativeY * (event.data.constants.smallDimension / 
+						event.data.canvases.coronalCanvas.height)),
 					'voxelValue' : voxelValue,
 					'url' :	window.location.protocol + "//" + window.location.host + 
 					window.location.pathname + "?axis=coronal&slice=" + 
 					event.data.coronalRenderer.getLastSlice() + '&clickX=' +
 					relativeX + '&clickY=' +relativeY + '&threshold=' +
-					viewer.threshold
+					event.data.threshold
 				});
 
 			
-				viewer.canvases.coronalCanvas.width = 
-					viewer.canvases.coronalCanvas.width;
-				viewer.canvases.sagittalCanvas.width = 
-					viewer.canvases.sagittalCanvas.width;
-				viewer.canvases.axialCanvas.width = 
-					viewer.canvases.axialCanvas.width;
+				event.data.canvases.coronalCanvas.width = 
+					event.data.canvases.coronalCanvas.width;
+				event.data.canvases.sagittalCanvas.width = 
+					event.data.canvases.sagittalCanvas.width;
+				event.data.canvases.axialCanvas.width = 
+					event.data.canvases.axialCanvas.width;
 				
 				/*
 				 * it would be more clear to deliver an object below,
@@ -378,7 +382,7 @@ var viewer = {
 				 * also passing on the event data. The current implementation does 
 				 * not use it, but it may be useful to other subscribers down the road.
 				 */
-				viewer.publishers.onCoronalChange.deliver([
+				event.data.publishers.onCoronalChange.deliver([
 					
 					{
 						renderArgs : Math.floor(sagSlice),
@@ -446,50 +450,56 @@ var viewer = {
 				coronalBackgroundRenderer : viewer.renderers.coronalBackgroundRenderer,
 				sagittalBackgroundRenderer : viewer.renderers.sagittalBackgroundRenderer,
 				axialBackgroundRenderer : viewer.renderers.axialBackgroundRenderer,
+				constants : viewer.constants,
+				staticFunctions : viewer.staticFunctions,
+				canvases : viewer.canvases,
+				brainImage : viewer.brainImage,
+				publishers : viewer.publishers,
+				threshold : viewer.threshold,
 			},
 			function(event){
 				//offset contains offset.left and offset.top
-				var coords = viewer.staticFunctions.resolveCrosshairCoords(
+				var coords = event.data.staticFunctions.resolveCrosshairCoords(
 					this, event);
 				
 				var relativeX = coords.relativeX;
 				var relativeY = coords.relativeY;
 				
-				var corSlice = relativeX / viewer.renderers.coronalRenderer.pixelSize;
-				var axSlice = relativeY / viewer.renderers.axialRenderer.pixelSize;
+				var corSlice = relativeX / event.data.coronalRenderer.pixelSize;
+				var axSlice = relativeY / event.data.axialRenderer.pixelSize;
 				
 				var voxelValue = viewer.brainImage.data
 					[Math.floor(corSlice)]
 					[event.data.sagittalRenderer.getLastSlice()]
 					[ Math.floor(axSlice)];
 				
-				viewer.publishers.onCrosshairChange.deliver({
-					'coordX' : Math.floor(relativeX * (viewer.constants.smallDimension /
-						viewer.canvases.sagittalCanvas.width)),
-					'coordY' : viewer.constants.largeDimension - 
+				event.data.publishers.onCrosshairChange.deliver({
+					'coordX' : Math.floor(relativeX * (event.data.constants.smallDimension /
+						event.data.canvases.sagittalCanvas.width)),
+					'coordY' : event.data.constants.largeDimension - 
 						Math.floor(event.data.sagittalRenderer.getLastSlice() * 
-						viewer.constants.coordinateMultiplier),
-					'coordZ' : viewer.constants.smallDimension - 
-						Math.floor(relativeY * (viewer.constants.smallDimension /
-						viewer.canvases.sagittalCanvas.height)),
+						event.data.constants.coordinateMultiplier),
+					'coordZ' : event.data.constants.smallDimension - 
+						Math.floor(relativeY * (event.data.constants.smallDimension /
+						event.data.canvases.sagittalCanvas.height)),
 					'voxelValue' : voxelValue,
 					'url' :	window.location.protocol + "//" + window.location.host + 
 					window.location.pathname + "?axis=sagittal&slice=" + 
 					event.data.sagittalRenderer.getLastSlice() + '&clickX=' +
 					relativeX + '&clickY=' +relativeY + '&threshold=' +
-					viewer.threshold
+					event.data.threshold
 				});
 
-				viewer.canvases.coronalCanvas.width = 
-					viewer.canvases.coronalCanvas.width;
-				viewer.canvases.sagittalCanvas.width = 
-					viewer.canvases.sagittalCanvas.width;
-				viewer.canvases.axialCanvas.width = 
-					viewer.canvases.axialCanvas.width;
+				event.data.canvases.coronalCanvas.width = 
+					event.data.canvases.coronalCanvas.width;
+				event.data.canvases.sagittalCanvas.width = 
+					event.data.canvases.sagittalCanvas.width;
+				event.data.canvases.axialCanvas.width = 
+					event.data.canvases.axialCanvas.width;
 				
 			
 				
-				viewer.publishers.onSagittalChange.deliver([
+				event.data.publishers.onSagittalChange.deliver([
 					
 					{
 						renderArgs : Math.floor(corSlice),
@@ -557,50 +567,56 @@ var viewer = {
 				coronalBackgroundRenderer : viewer.renderers.coronalBackgroundRenderer,
 				sagittalBackgroundRenderer : viewer.renderers.sagittalBackgroundRenderer,
 				axialBackgroundRenderer : viewer.renderers.axialBackgroundRenderer,
+				constants : viewer.constants,
+				staticFunctions : viewer.staticFunctions,
+				canvases : viewer.canvases,
+				brainImage : viewer.brainImage,
+				publishers : viewer.publishers,
+				threshold : viewer.threshold,
 			},
 			function(event){
 				//offset contains offset.left and offset.top
 				//in the event callback context, this refers to the canvas element
 				
-				var coords = viewer.staticFunctions.resolveCrosshairCoords(
+				var coords = event.data.staticFunctions.resolveCrosshairCoords(
 					this, event);
 				
 				var relativeX = coords.relativeX;
 				var relativeY = coords.relativeY;
 				
-				var sagSlice = relativeY / viewer.renderers.coronalRenderer.pixelSize;
-				var corSlice = relativeX / viewer.renderers.sagittalRenderer.pixelSize;
+				var sagSlice = relativeY / event.data.coronalRenderer.pixelSize;
+				var corSlice = relativeX / event.data.sagittalRenderer.pixelSize;
 	
-				var voxelValue = viewer.brainImage.data
+				var voxelValue = event.data.brainImage.data
 					[Math.floor(corSlice)]
 					[ Math.floor(sagSlice)]
 					[event.data.axialRenderer.getLastSlice()];
 				
-				viewer.publishers.onCrosshairChange.deliver({
-					'coordX' : Math.floor(relativeX * (viewer.constants.smallDimension /
-						viewer.canvases.axialCanvas.width)),
-					'coordY' : viewer.constants.largeDimension - 
-						Math.floor(relativeY * (viewer.constants.largeDimension /
-						viewer.canvases.axialCanvas.height)),
-					'coordZ' : viewer.constants.smallDimension - 
+				event.data.publishers.onCrosshairChange.deliver({
+					'coordX' : Math.floor(relativeX * (event.data.constants.smallDimension /
+						event.data.canvases.axialCanvas.width)),
+					'coordY' : event.data.constants.largeDimension - 
+						Math.floor(relativeY * (event.data.constants.largeDimension /
+						event.data.canvases.axialCanvas.height)),
+					'coordZ' : event.data.constants.smallDimension - 
 						Math.floor(event.data.axialRenderer.getLastSlice() *
-						viewer.constants.coordinateMultiplier),
+						event.data.constants.coordinateMultiplier),
 					'voxelValue' : voxelValue,
 					'url' :	window.location.protocol + "//" + window.location.host + 
 					window.location.pathname + "?axis=axial&slice=" + 
 					event.data.axialRenderer.getLastSlice() + '&clickX=' +
 					relativeX + '&clickY=' +relativeY + '&threshold=' +
-					viewer.threshold
+					event.data.threshold
 				});
 	
-				viewer.canvases.coronalCanvas.width = 
-					viewer.canvases.coronalCanvas.width;
-				viewer.canvases.sagittalCanvas.width = 
-					viewer.canvases.sagittalCanvas.width;
-				viewer.canvases.axialCanvas.width = 
-					viewer.canvases.axialCanvas.width;
+				event.data.canvases.coronalCanvas.width = 
+					event.data.canvases.coronalCanvas.width;
+				event.data.canvases.sagittalCanvas.width = 
+					event.data.canvases.sagittalCanvas.width;
+				event.data.canvases.axialCanvas.width = 
+					event.data.canvases.axialCanvas.width;
 				
-				viewer.publishers.onAxialChange.deliver([
+				event.data.publishers.onAxialChange.deliver([
 					
 					{
 						renderArgs : Math.floor(corSlice),
