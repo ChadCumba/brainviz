@@ -6,13 +6,27 @@ var viewer = {
 	
 	instantiated : false,
 	
+	/*
+	 * @param imageURL - string describing the url to load data from
+	 * @param canvases - object that responds to coronal, sagittal, and axial
+	 * 					and contains the requisite canvases
+	 * @param texts - object that responds to coordinates, voxel, url, and 
+	 * 					threshold and contains the requisite dom objects
+	 * @param thresholds - object that responds to slider, value, and orientation.
+	 * 						slider is a dom object to paint the slider on,
+	 * 						value is the starting value of the slider, and 
+	 * 						orientation is either "vertical" or "horizontal"
+	 * @param backgroundFillCallback - callback function that returns a css color
+	 * @param backgrounds - object that responds to coronal, sagittal, and axial.
+	 * 						contains the background arrays for each canvas.
+	 */
 	init: function(imageURL, canvases, texts, thresholds, backgroundFillCallback,
 			backgrounds) {
 		if(this.instantiated){
 			return;
 		}
 		
-		var heatMap = loadJsonDataFromLocation(imageUrl);
+		var heatMap = loadJsonDataFromLocation(imageURL);
 		
 		for(var i = 0; i < heatMap.data.length; i++){
 			heatMap.data[i].reverse();
@@ -122,6 +136,10 @@ var viewer = {
 		//sets the click handling bindings
 		this.setEventBindings();
 		
+		if(thresholds.value == null){
+			thresholds.value = this.brainImage.getMin();
+		}
+		
 		$(thresholds.slider).slider({max: this.brainImage.getMax(),
 			min : this.brainImage.getMin(),
 			value : thresholds.value,
@@ -132,25 +150,27 @@ var viewer = {
 			brainImage : this.brainImage,
 		},
 			function(event, ui){
-				currentThreshold = event.coronalRenderer.getThreshold();
+				currentThreshold = event.data.coronalRenderer.getThreshold();
 				range = currentThreshold - ui.value;
 				range = Math.abs(range);
-				scale = Math.abs(event.brainImage.getMax() -
-					event.brainImage.getMin());
+				scale = Math.abs(event.data.brainImage.getMax() -
+					event.data.brainImage.getMin());
 				if(range/scale > .1){
 					//if there is more than a 10% change in the threshold,
 					//rerender with the new value to give the illusion of 
 					//responsiveness 
-					event.onThresholdChange.deliver(ui.value);
+					event.data.onThresholdChange.deliver(ui.value);
 				}
 		}).bind('slidechange',
 			{
 				onThresholdChange: this.publishers.onThresholdChange,
 			},
 			function(event, ui){
-				event.onThresholdChange.deliver(ui.value);
+				event.data.onThresholdChange.deliver(ui.value);
 			} 
 		);
+		
+		this.instantiated = true;
 		
 	},
 	
@@ -329,7 +349,6 @@ var viewer = {
 				canvases : viewer.canvases,
 				brainImage : viewer.brainImage,
 				publishers : viewer.publishers,
-				threshold : viewer.threshold,
 			},
 			function(event){
 				//offset contains offset.left and offset.top
@@ -362,7 +381,7 @@ var viewer = {
 					window.location.pathname + "?axis=coronal&slice=" + 
 					event.data.coronalRenderer.getLastSlice() + '&clickX=' +
 					relativeX + '&clickY=' +relativeY + '&threshold=' +
-					event.data.threshold
+					viewer.threshold
 				});
 
 			
@@ -455,7 +474,6 @@ var viewer = {
 				canvases : viewer.canvases,
 				brainImage : viewer.brainImage,
 				publishers : viewer.publishers,
-				threshold : viewer.threshold,
 			},
 			function(event){
 				//offset contains offset.left and offset.top
@@ -487,7 +505,7 @@ var viewer = {
 					window.location.pathname + "?axis=sagittal&slice=" + 
 					event.data.sagittalRenderer.getLastSlice() + '&clickX=' +
 					relativeX + '&clickY=' +relativeY + '&threshold=' +
-					event.data.threshold
+					viewer.threshold
 				});
 
 				event.data.canvases.coronalCanvas.width = 
@@ -572,7 +590,6 @@ var viewer = {
 				canvases : viewer.canvases,
 				brainImage : viewer.brainImage,
 				publishers : viewer.publishers,
-				threshold : viewer.threshold,
 			},
 			function(event){
 				//offset contains offset.left and offset.top
@@ -606,7 +623,7 @@ var viewer = {
 					window.location.pathname + "?axis=axial&slice=" + 
 					event.data.axialRenderer.getLastSlice() + '&clickX=' +
 					relativeX + '&clickY=' +relativeY + '&threshold=' +
-					event.data.threshold
+					viewer.threshold
 				});
 	
 				event.data.canvases.coronalCanvas.width = 
