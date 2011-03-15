@@ -6,8 +6,18 @@
 $(window).load(function(){
 	
 	/* global viewer: false, image_id_to_load: false, Math: false,
-	 * loadJsonDataFromLocation: false, brainData: false
+	 * loadJsonDataFromLocation: false, brainData: false, $: true
 	 */ 
+	 
+	if(document.createElement('canvas').getContext == undefined){
+ 		alert('Your browser does not support the HTML5 <canvas> element.'+
+ 		' This application will not work on your browser. Please use IE9, '+
+ 		'Firefox 3.0+, Safari 3.0+, Chrome 3.0+, or Opera 10.0+');
+ 		return;
+ 	}
+ 
+	
+	 
 	
 	//show the loading image twirling thing
 	$('#loading-image').removeClass('hidden').attr('style', 

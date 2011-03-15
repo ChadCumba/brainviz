@@ -3,7 +3,7 @@ Created on Jan 11, 2011
 
 @author: chadcumba
 '''
-from brainviz.image.models import ThreeDimensional
+from brainviz.image.models import ThreeDimensional, Category
 from django.contrib import admin
 
 class ImageAdmin(admin.ModelAdmin):
@@ -11,3 +11,4 @@ class ImageAdmin(admin.ModelAdmin):
                            'user_slug': ('user',),}
 
 admin.site.register(ThreeDimensional, ImageAdmin)
+admin.site.register(Category)

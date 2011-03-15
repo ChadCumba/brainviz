@@ -98,8 +98,15 @@ def get_brain_image_path(instance, filename):
     
     return os.path.join(storage_directory,unique_name + ext)
 
-
-
+class Category(models.Model):
+    name = models.CharField(max_length=255, null=False)
+    description = models.CharField(max_length=255,null=True)
+    
+    def __unicode__(self):
+        if self.name is not None:
+            return self.name
+        return 'None'
+    
 class ThreeDimensional(models.Model):
     user = models.ForeignKey(User, unique=False)
     name = models.CharField(max_length=255, null=False)
@@ -109,11 +116,11 @@ class ThreeDimensional(models.Model):
     #'brain_slug'
     brain_slug = models.SlugField(null=False)
     user_slug = models.SlugField(null=False)
+    category = models.ManyToManyField(Category, null=True, blank=True)
         
     def __unicode__(self):
         if self.user is not None:
             return self.user.username + '-' + self.name
         return 'unknown'
     
-class Category(models.Model):
-    pass
+
