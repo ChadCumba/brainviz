@@ -7,7 +7,6 @@ import json
 
 from django.db import models
 from django.contrib.auth.models import User
-from image.fields import LargeMatrixField
 from django.conf import settings
 from django.core.files.storage import Storage, FileSystemStorage
 from django.core.files import File
@@ -106,14 +105,15 @@ class ThreeDimensional(models.Model):
     name = models.CharField(max_length=255, null=False)
     brain_image = models.FileField(upload_to=get_brain_image_path, 
                                    storage=BrainDataStorage())
-    brain_data = LargeMatrixField(unique=False, blank=True, null=True,
-                                   editable=False)
+    #this isn't a great naming convention, but I couldn't resist calling it
+    #'brain_slug'
     brain_slug = models.SlugField(null=False)
     user_slug = models.SlugField(null=False)
-    
+        
     def __unicode__(self):
         if self.user is not None:
             return self.user.username + '-' + self.name
         return 'unknown'
     
-
+class Category(models.Model):
+    pass

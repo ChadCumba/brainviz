@@ -10,6 +10,6 @@ var globalEventBindings = {
 	},
 	attachAxialClickHandler   : function(){
 		
-	},
+	}
 	
 };

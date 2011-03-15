@@ -13,3 +13,4 @@ adminpass
 brainviz/settings.py
 *png
 brainviz/static/viewerimages/spinner.gif
+brainviz/static/.DS_Store

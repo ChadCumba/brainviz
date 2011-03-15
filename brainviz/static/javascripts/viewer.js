@@ -143,11 +143,11 @@ var viewer = {
 		$(thresholds.slider).slider({max: this.brainImage.getMax(),
 			min : this.brainImage.getMin(),
 			value : thresholds.value,
-			orientation: thresholds.orientation,
+			orientation: thresholds.orientation
 		}).bind('slide', {
 			coronalRenderer : this.renderers.coronalRenderer,
 			onThresholdChange : this.publishers.onThresholdChange,
-			brainImage : this.brainImage,
+			brainImage : this.brainImage
 		},
 			function(event, ui){
 				currentThreshold = event.data.coronalRenderer.getThreshold();
@@ -163,7 +163,7 @@ var viewer = {
 				}
 		}).bind('slidechange',
 			{
-				onThresholdChange: this.publishers.onThresholdChange,
+				onThresholdChange: this.publishers.onThresholdChange
 			},
 			function(event, ui){
 				event.data.onThresholdChange.deliver(ui.value);
@@ -177,7 +177,7 @@ var viewer = {
 	constants : {
 		coordinateMultiplier : 1.5,
 		smallDimension : 91,
-		largeDimension : 109,
+		largeDimension : 109
 	},
 	
 	/*
@@ -191,7 +191,7 @@ var viewer = {
 		onSagittalRenderingComplete : new Publisher(),
 		onAxialRenderingComplete : new Publisher(),
 		onCrosshairChange : new Publisher(),
-		onThresholdChange : new Publisher(),
+		onThresholdChange : new Publisher()
 	},
 	
 	/*
@@ -288,7 +288,7 @@ var viewer = {
 	canvases : {
 		coronalCanvas : null,
 		sagittalCanvas : null,
-		axialCanvas : null,
+		axialCanvas : null
 	},
 	
 	/*
@@ -314,14 +314,14 @@ var viewer = {
 		axialCrosshairs : null,
 		coronalBackgroundRenderer: null,
 		sagittalBackgroundRenderer : null,
-		axialBackgroundRenderer : null,
+		axialBackgroundRenderer : null
 	},
 	
 	textOutput : {
 		coordinateObject : null,
 		voxelObject : null,
 		urlObject : null,
-		thresholdObject: null,
+		thresholdObject: null
 	},
 	
 	threshold : null,
@@ -348,7 +348,7 @@ var viewer = {
 				staticFunctions : viewer.staticFunctions,
 				canvases : viewer.canvases,
 				brainImage : viewer.brainImage,
-				publishers : viewer.publishers,
+				publishers : viewer.publishers
 			},
 			function(event){
 				//offset contains offset.left and offset.top
@@ -406,52 +406,52 @@ var viewer = {
 					{
 						renderArgs : Math.floor(sagSlice),
 						renderer : event.data.sagittalRenderer,
-						weight : 1,
+						weight : 1
 					},
 					
 					{
 						renderArgs : Math.floor(axSlice),
 						renderer : event.data.axialRenderer,
-						weight : 1,
+						weight : 1
 					},
 					{
 						renderArgs : [ relativeX, relativeY ],
 						renderer : event.data.coronalCrosshairs,
-						weight : 2,
+						weight : 2
 					},
 					{
 						renderArgs : event.data.coronalRenderer.getLastSlice(),
 						renderer : event.data.coronalRenderer,
-						weight : 1,
+						weight : 1
 					},
 					{
 						renderArgs : [  event.data.coronalRenderer.getLastSlice() 
 										* event.data.coronalRenderer.pixelSize,
 										relativeY],
 						renderer : event.data.sagittalCrosshairs,
-						weight : 2,
+						weight : 2
 					},
 					{
 						renderArgs : [  event.data.coronalRenderer.getLastSlice() 
 										* event.data.coronalRenderer.pixelSize,
 										relativeX ],
 						renderer : event.data.axialCrosshairs,
-						weight : 2,
+						weight : 2
 					},
 					{
 						renderArgs : event.data.coronalRenderer.getLastSlice(),
 						renderer : event.data.coronalBackgroundRenderer,
-						weight : 0,
+						weight : 0
 					},
 					{
 						renderArgs : Math.floor(axSlice),
 						renderer : event.data.axialBackgroundRenderer,
-						weight : 0,
+						weight : 0
 					},
 					{
 						renderArgs : Math.floor(sagSlice),
 						renderer : event.data.sagittalBackgroundRenderer,
-						weight : 0,
+						weight : 0
 					}
 					
 				], event);
@@ -473,7 +473,7 @@ var viewer = {
 				staticFunctions : viewer.staticFunctions,
 				canvases : viewer.canvases,
 				brainImage : viewer.brainImage,
-				publishers : viewer.publishers,
+				publishers : viewer.publishers
 			},
 			function(event){
 				//offset contains offset.left and offset.top
@@ -522,52 +522,52 @@ var viewer = {
 					{
 						renderArgs : Math.floor(corSlice),
 						renderer : event.data.coronalRenderer,
-						weight : 1,
+						weight : 1
 					},
 					
 					{
 						renderArgs : Math.floor(axSlice),
 						renderer : event.data.axialRenderer,
-						weight : 1,
+						weight : 1
 					},
 					{
 						renderArgs : event.data.sagittalRenderer.getLastSlice(),
 						renderer : event.data.sagittalRenderer,
-						weight : 1,
+						weight : 1
 					},
 					{
 						renderArgs : [relativeX, relativeY],
 						renderer : event.data.sagittalCrosshairs,
-						weight : 2,
+						weight : 2
 					},
 					{
 						renderArgs : [ event.data.sagittalRenderer.getLastSlice() 
 									* event.data.sagittalRenderer.pixelSize,
 									relativeY],
 						renderer : event.data.coronalCrosshairs,
-						weight : 2,
+						weight : 2
 					},
 					{
 						renderArgs : [ relativeX,
 									event.data.sagittalRenderer.getLastSlice() 
 									* event.data.sagittalRenderer.pixelSize ],
 						renderer : event.data.axialCrosshairs,
-						weight : 2,
+						weight : 2
 					},
 					{
 						renderArgs : Math.floor(corSlice),
 						renderer : event.data.coronalBackgroundRenderer,
-						weight : 0,
+						weight : 0
 					},
 					{
 						renderArgs : Math.floor(axSlice),
 						renderer : event.data.axialBackgroundRenderer,
-						weight : 0,
+						weight : 0
 					},
 					{
 						renderArgs : event.data.sagittalRenderer.getLastSlice(),
 						renderer : event.data.sagittalBackgroundRenderer,
-						weight : 0,
+						weight : 0
 					}
 										
 				], event);
@@ -589,7 +589,7 @@ var viewer = {
 				staticFunctions : viewer.staticFunctions,
 				canvases : viewer.canvases,
 				brainImage : viewer.brainImage,
-				publishers : viewer.publishers,
+				publishers : viewer.publishers
 			},
 			function(event){
 				//offset contains offset.left and offset.top
@@ -638,52 +638,52 @@ var viewer = {
 					{
 						renderArgs : Math.floor(corSlice),
 						renderer : event.data.coronalRenderer,
-						weight : 1,
+						weight : 1
 					},
 					
 					{
 						renderArgs : Math.floor(sagSlice),
 						renderer : event.data.sagittalRenderer,
-						weight : 1,
+						weight : 1
 					},
 					{
 						renderArgs : event.data.axialRenderer.getLastSlice(),
 						renderer : event.data.axialRenderer,
-						weight : 1,
+						weight : 1
 					},
 					{
 						renderArgs : [relativeX, relativeY],
 						renderer : event.data.axialCrosshairs,
-						weight: 2,
+						weight: 2
 					},
 					{
 						renderArgs : [relativeX, 
 										event.data.axialRenderer.getLastSlice()
 										* event.data.axialRenderer.pixelSize],
 						renderer : event.data.sagittalCrosshairs,
-						weight : 2,
+						weight : 2
 					},
 					{
 						renderArgs : [relativeY, 
 										event.data.axialRenderer.getLastSlice()
 										* event.data.axialRenderer.pixelSize ],
 						renderer : event.data.coronalCrosshairs,
-						weight : 2,
+						weight : 2
 					},
 					{
 						renderArgs : Math.floor(corSlice),
 						renderer : event.data.coronalBackgroundRenderer,
-						weight : 0,
+						weight : 0
 					},
 					{
 						renderArgs : Math.floor(sagSlice),
 						renderer : event.data.sagittalBackgroundRenderer,
-						weight : 0,
+						weight : 0
 					},
 					{
 						renderArgs : event.data.axialRenderer.getLastSlice(),
 						renderer : event.data.axialBackgroundRenderer,
-						weight : 0,
+						weight : 0
 					}
 					
 					
@@ -715,6 +715,6 @@ var viewer = {
 			clickEvent.relativeX = viewer.renderers.sagittalCrosshairs.getLastX();
 			clickEvent.relativeY = viewer.renderers.sagittalCrosshairs.getLastY();
 			$(viewer.canvases.sagittalCanvas).trigger(clickEvent);
-		},
-	},
+		}
+	}
 };

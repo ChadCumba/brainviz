@@ -62,5 +62,5 @@ var brainImage = {
 		}
 		
 		return axialSlice;
-	},
+	}
 };
