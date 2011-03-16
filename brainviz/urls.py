@@ -18,4 +18,5 @@ urlpatterns = patterns('',
         {'document_root': settings.MEDIA_ROOT}),
     (r'^image/', include('brainviz.image.urls')),
     (r'^$', 'brainviz.image.views.ImageListing'),
+    (r'^signup/$',include('brainviz.signup.urls')),
 )

@@ -11,6 +11,7 @@ from django.conf import settings
 from django.core.files.storage import Storage, FileSystemStorage
 from django.core.files import File
 from image.transforms import resize
+from django.contrib.sites.models import Site
 
 #Brain data storage object
 #the _save function is specifically overridden to alter the nifti file 
@@ -102,12 +103,16 @@ class Category(models.Model):
     name = models.CharField(max_length=255, null=False)
     description = models.CharField(max_length=255,null=True)
     
+    class Meta:
+        verbose_name_plural = "Categories"
+    
     def __unicode__(self):
         if self.name is not None:
             return self.name
         return 'None'
     
 class ThreeDimensional(models.Model):
+    
     user = models.ForeignKey(User, unique=False)
     name = models.CharField(max_length=255, null=False)
     brain_image = models.FileField(upload_to=get_brain_image_path, 
@@ -117,10 +122,29 @@ class ThreeDimensional(models.Model):
     brain_slug = models.SlugField(null=False)
     user_slug = models.SlugField(null=False)
     category = models.ManyToManyField(Category, null=True, blank=True)
+    paper_url = models.URLField(null=True, blank=True)
+    
+    class Meta:
+        permissions = (
+            ("view_all_threedimensional", "Can view all images"),
+            ("view_own_threedimensional", "Can view own images"),
+            ("change_own_threedimensional", "Can edit own images"),
+            ("delete_own_threedimensional", "Can delete own images"),
+        )
         
     def __unicode__(self):
         if self.user is not None:
             return self.user.username + '-' + self.name
         return 'unknown'
     
+    @models.permalink
+    def get_absolute_url(self):
+        return ('image_view', (), {
+            'user_name': str(self.user_slug),
+            'image_slug': str(self.brain_slug),
+        })
+    
+    def get_fq_url(self):
+        return 'http://%s%s' % (Site.objects.get_current().domain,
+            self.get_absolute_url())
 

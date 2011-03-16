@@ -140,7 +140,8 @@ def ImageListing(request):
     except (EmptyPage, InvalidPage):
         images = paginator.page(paginator.num_pages)
 
-    return render_to_response('image/list.html', {"images": images})
+    return render_to_response('image/list.html', {"images": images},
+                              context_instance=RequestContext(request))
 
 def SaveImageString(request):
     if request.method != 'POST':
