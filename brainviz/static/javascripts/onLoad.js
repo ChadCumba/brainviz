@@ -29,7 +29,12 @@ $(window).load(function(){
 				window.localStorage[key] = value;
 				return key;
 			}catch(error){
-				return false;
+				//we'll try to clear the storage if an error occurs
+				//if that doesn't work we'll just let the exception bubble up
+				//because something is seriously wrong.
+				window.localStorage.clear();
+				window.localStorage[key] = value;
+				return key;
 			}
 		};
 		retrieve = function(key){

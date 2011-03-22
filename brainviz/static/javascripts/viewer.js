@@ -144,15 +144,38 @@ var viewer = {
 			);
 	
 		//subscribe the listeners to the event handlers
-		this.listeners.dispatchRenderingData.subscribe(
-			this.publishers.onSagittalChange
-		);
-		this.listeners.dispatchRenderingData.subscribe(
+		this.listeners.updateSagittalCanvas.subscribe(
 			this.publishers.onAxialChange
 		);
-		this.listeners.dispatchRenderingData.subscribe(
+		this.listeners.updateAxialCanvas.subscribe(
+			this.publishers.onAxialChange
+		);
+		this.listeners.updateCoronalCanvas.subscribe(
+			this.publishers.onAxialChange
+		);
+		
+		this.listeners.updateSagittalCanvas.subscribe(
 			this.publishers.onCoronalChange
 		);
+		this.listeners.updateAxialCanvas.subscribe(
+			this.publishers.onCoronalChange
+		);
+		this.listeners.updateCoronalCanvas.subscribe(
+			this.publishers.onCoronalChange
+		);
+		
+		this.listeners.updateSagittalCanvas.subscribe(
+			this.publishers.onSagittalChange
+		);
+		this.listeners.updateAxialCanvas.subscribe(
+			this.publishers.onSagittalChange
+		);
+		this.listeners.updateCoronalCanvas.subscribe(
+			this.publishers.onSagittalChange
+		);
+		
+		
+		
 		this.listeners.updateTextDisplay.subscribe(
 			this.publishers.onCrosshairChange
 		);
@@ -228,62 +251,6 @@ var viewer = {
 	 */
 	listeners : {
 		
-		/*
-		 * Takes in a list of renderingGroups and calls displaySlice on the
-		 * renderer in each group with the slice number provided in the group
-		 * 
-		 * This is sort of a down and dirty composite class
-		 * It should likely be refactored to an actual composite, but that 
-		 * can wait for now.
-		 * 
-		 * @param renderingGroups - takes a list of objects, each should 
-		 * 							contain the members slice, renderer, and weight.
-		 * 							Slice is the slice to render, renderer is 
-		 * 							the renderer to dispatch to, and weight is
-		 * 							the order to render in (heavier items render
-		 * 							later than lighter items)
-		 */
-		dispatchRenderingData : function(renderingGroups) {
-			if(renderingGroups == null){
-				throw ('dispatch called with no arguments');
-				return;
-			}
-			if(renderingGroups.length == 0){
-				throw('no renderer to dispatch to');
-				return;
-			}
-			for(var i = 0; i < renderingGroups.length; i++){
-				if(renderingGroups[i].renderArgs == undefined ){
-					throw('attempting to dispatch renderer number '+i
-					+' with no slice');	
-				}
-				if(renderingGroups[i].renderer == undefined){
-					throw('attempting to dispatch renderer number '+i
-					+' with no renderer');
-				}
-				if(renderingGroups[i].weight == undefined){
-					throw('attempting to dispatch renderer number '+i
-					+' with no weight')
-				}
-			}
-			
-			renderingGroups.sort(function(a,b){
-				if(a.weight > b.weight){
-					return 1;
-				}
-				if(a.weight < b.weight){
-					return -1;
-				}
-				return 0;
-			});
-			
-			for (var i = 0; i < renderingGroups.length; i++){
-				renderingGroups[i].renderer.render(
-					renderingGroups[i].renderArgs
-				);
-			}
-
-		},
 		
 		updateTextDisplay : function(data){
 
@@ -306,8 +273,124 @@ var viewer = {
 				viewer.staticFunctions.rerenderAll();
 				$(viewer.textOutput.thresholdObject).html(data);
 			}
+		},
+		
+		updateSagittalCanvas : function(data){
+			/*
+			 * data.sagittalSlice
+			 * 	.axialSlice
+			 * 	.coronalSlice
+			 * 	.coordinateX
+			 * 	.coordinateY
+			 *  .canvasChange
+			 */
+			var xCoord, yCoord;
+			
+			switch(data.canvasChange){
+				case 'coronal':
+					xCoord = viewer.renderers.coronalRenderer.getLastSlice() *
+						viewer.renderers.coronalRenderer.pixelSize;
+					yCoord = data.coordinateY;
+					break;
+				case 'sagittal':
+					xCoord = data.coordinateX;
+					yCoord = data.coordinateY;
+					break;
+				case 'axial':
+					xCoord = data.coordinateX;
+					yCoord = viewer.renderers.axialRenderer.getLastSlice() *
+						viewer.renderers.axialRenderer.pixelSize;
+					break;
+			}
+			 
+			viewer.renderers.sagittalBackgroundRenderer.renderingComplete = function(){
+				viewer.renderers.sagittalRenderer.render(data.sagittalSlice);
+			};
+			viewer.renderers.sagittalRenderer.renderingComplete = function() {
+				viewer.renderers.sagittalCrosshairs.render(xCoord,yCoord);
+			};
+			
+			viewer.renderers.sagittalBackgroundRenderer.render(data.sagittalSlice);
+
+		},
+		
+		updateCoronalCanvas : function(data){
+			/*
+			 * data.sagittalSlice
+			 * 	.axialSlice
+			 * 	.coronalSlice
+			 * 	.coordinateX
+			 * 	.coordinateY
+			 * 	.canvasChange
+			 */
+			 
+			var xCoord, yCoord;
+			
+			switch(data.canvasChange){
+				case 'coronal':
+					xCoord = data.coordinateX;
+					yCoord = data.coordinateY;
+					break;
+				case 'sagittal':
+					xCoord = viewer.renderers.sagittalRenderer.getLastSlice() *
+						viewer.renderers.sagittalRenderer.pixelSize;
+					yCoord = data.coordinateY;
+					break;
+				case 'axial':
+					xCoord = data.coordinateY;
+					yCoord = viewer.renderers.axialRenderer.getLastSlice() *
+						viewer.renderers.axialRenderer.pixelSize;
+					break;
+			}
+			 
+			viewer.renderers.coronalBackgroundRenderer.renderingComplete = function(){
+				viewer.renderers.coronalRenderer.render(data.coronalSlice);
+			};
+			viewer.renderers.coronalRenderer.renderingComplete = function() {
+				viewer.renderers.coronalCrosshairs.render(xCoord,yCoord);
+			};
+			
+			viewer.renderers.coronalBackgroundRenderer.render(data.coronalSlice);
+
+		},
+		
+		updateAxialCanvas : function(data){
+			/*
+			 * data.sagittalSlice
+			 * 	.axialSlice
+			 * 	.coronalSlice
+			 * 	.coordinateX
+			 * 	.coordinateY
+			 * 	.canvasChange
+			 */
+			var xCoord, yCoord;
+			
+			switch(data.canvasChange){
+				case 'coronal':
+					xCoord = viewer.renderers.coronalRenderer.getLastSlice() * 
+						viewer.renderers.coronalRenderer.pixelSize;
+					yCoord = data.coordinateY;
+					break;
+				case 'sagittal':
+					xCoord = data.coordinateX;
+					yCoord = viewer.renderers.sagittalRenderer.getLastSlice() *
+						viewer.renderers.sagittalRenderer.pixelSize;
+					break;
+				case 'axial':
+					xCoord = data.coordinateX;
+					yCoord = data.coordinateY;
+					break;
+			}
+			
+			viewer.renderers.axialBackgroundRenderer.renderingComplete = function(){
+				viewer.renderers.axialRenderer.render(data.axialSlice);
+			};
+			viewer.renderers.axialRenderer.renderingComplete = function() {
+				viewer.renderers.axialCrosshairs.render(xCoord,yCoord);
+			};
+			
+			viewer.renderers.axialBackgroundRenderer.render(data.axialSlice);
 		}
-	
 	},
 	
 	/*
@@ -417,7 +500,6 @@ var viewer = {
 					relativeX + '&clickY=' +relativeY + '&threshold=' +
 					viewer.threshold
 				});
-
 			
 				event.data.canvases.coronalCanvas.width = 
 					event.data.canvases.coronalCanvas.width;
@@ -435,60 +517,14 @@ var viewer = {
 				 * also passing on the event data. The current implementation does 
 				 * not use it, but it may be useful to other subscribers down the road.
 				 */
-				event.data.publishers.onCoronalChange.deliver([
-					
-					{
-						renderArgs : Math.floor(sagSlice),
-						renderer : event.data.sagittalRenderer,
-						weight : 1
-					},
-					
-					{
-						renderArgs : Math.floor(axSlice),
-						renderer : event.data.axialRenderer,
-						weight : 1
-					},
-					{
-						renderArgs : [ relativeX, relativeY ],
-						renderer : event.data.coronalCrosshairs,
-						weight : 2
-					},
-					{
-						renderArgs : event.data.coronalRenderer.getLastSlice(),
-						renderer : event.data.coronalRenderer,
-						weight : 1
-					},
-					{
-						renderArgs : [  event.data.coronalRenderer.getLastSlice() 
-										* event.data.coronalRenderer.pixelSize,
-										relativeY],
-						renderer : event.data.sagittalCrosshairs,
-						weight : 2
-					},
-					{
-						renderArgs : [  event.data.coronalRenderer.getLastSlice() 
-										* event.data.coronalRenderer.pixelSize,
-										relativeX ],
-						renderer : event.data.axialCrosshairs,
-						weight : 2
-					},
-					{
-						renderArgs : event.data.coronalRenderer.getLastSlice(),
-						renderer : event.data.coronalBackgroundRenderer,
-						weight : 0
-					},
-					{
-						renderArgs : Math.floor(axSlice),
-						renderer : event.data.axialBackgroundRenderer,
-						weight : 0
-					},
-					{
-						renderArgs : Math.floor(sagSlice),
-						renderer : event.data.sagittalBackgroundRenderer,
-						weight : 0
-					}
-					
-				], event);
+				event.data.publishers.onCoronalChange.deliver({
+					canvasChange : 'coronal',
+					sagittalSlice : Math.floor(sagSlice),
+					axialSlice : Math.floor(axSlice),
+					coronalSlice : event.data.coronalRenderer.getLastSlice(),
+					coordinateX : relativeX,
+					coordinateY : relativeY
+				});
 			}
 		);
 		
@@ -551,60 +587,14 @@ var viewer = {
 				
 			
 				
-				event.data.publishers.onSagittalChange.deliver([
-					
-					{
-						renderArgs : Math.floor(corSlice),
-						renderer : event.data.coronalRenderer,
-						weight : 1
-					},
-					
-					{
-						renderArgs : Math.floor(axSlice),
-						renderer : event.data.axialRenderer,
-						weight : 1
-					},
-					{
-						renderArgs : event.data.sagittalRenderer.getLastSlice(),
-						renderer : event.data.sagittalRenderer,
-						weight : 1
-					},
-					{
-						renderArgs : [relativeX, relativeY],
-						renderer : event.data.sagittalCrosshairs,
-						weight : 2
-					},
-					{
-						renderArgs : [ event.data.sagittalRenderer.getLastSlice() 
-									* event.data.sagittalRenderer.pixelSize,
-									relativeY],
-						renderer : event.data.coronalCrosshairs,
-						weight : 2
-					},
-					{
-						renderArgs : [ relativeX,
-									event.data.sagittalRenderer.getLastSlice() 
-									* event.data.sagittalRenderer.pixelSize ],
-						renderer : event.data.axialCrosshairs,
-						weight : 2
-					},
-					{
-						renderArgs : Math.floor(corSlice),
-						renderer : event.data.coronalBackgroundRenderer,
-						weight : 0
-					},
-					{
-						renderArgs : Math.floor(axSlice),
-						renderer : event.data.axialBackgroundRenderer,
-						weight : 0
-					},
-					{
-						renderArgs : event.data.sagittalRenderer.getLastSlice(),
-						renderer : event.data.sagittalBackgroundRenderer,
-						weight : 0
-					}
-										
-				], event);
+				event.data.publishers.onSagittalChange.deliver({
+					canvasChange : 'sagittal',
+					sagittalSlice : event.data.sagittalRenderer.getLastSlice(),
+					axialSlice : Math.floor(axSlice),
+					coronalSlice : Math.floor(corSlice),
+					coordinateX : relativeX,
+					coordinateY : relativeY
+				});
 			}
 		);
 		
@@ -667,61 +657,14 @@ var viewer = {
 				event.data.canvases.axialCanvas.width = 
 					event.data.canvases.axialCanvas.width;
 				
-				event.data.publishers.onAxialChange.deliver([
-					
-					{
-						renderArgs : Math.floor(corSlice),
-						renderer : event.data.coronalRenderer,
-						weight : 1
-					},
-					
-					{
-						renderArgs : Math.floor(sagSlice),
-						renderer : event.data.sagittalRenderer,
-						weight : 1
-					},
-					{
-						renderArgs : event.data.axialRenderer.getLastSlice(),
-						renderer : event.data.axialRenderer,
-						weight : 1
-					},
-					{
-						renderArgs : [relativeX, relativeY],
-						renderer : event.data.axialCrosshairs,
-						weight: 2
-					},
-					{
-						renderArgs : [relativeX, 
-										event.data.axialRenderer.getLastSlice()
-										* event.data.axialRenderer.pixelSize],
-						renderer : event.data.sagittalCrosshairs,
-						weight : 2
-					},
-					{
-						renderArgs : [relativeY, 
-										event.data.axialRenderer.getLastSlice()
-										* event.data.axialRenderer.pixelSize ],
-						renderer : event.data.coronalCrosshairs,
-						weight : 2
-					},
-					{
-						renderArgs : Math.floor(corSlice),
-						renderer : event.data.coronalBackgroundRenderer,
-						weight : 0
-					},
-					{
-						renderArgs : Math.floor(sagSlice),
-						renderer : event.data.sagittalBackgroundRenderer,
-						weight : 0
-					},
-					{
-						renderArgs : event.data.axialRenderer.getLastSlice(),
-						renderer : event.data.axialBackgroundRenderer,
-						weight : 0
-					}
-					
-					
-				], event);
+				event.data.publishers.onAxialChange.deliver({
+					canvasChange : 'axial',
+					sagittalSlice : Math.floor(sagSlice),
+					axialSlice : event.data.axialRenderer.getLastSlice(),
+					coronalSlice : Math.floor(corSlice),
+					coordinateX : relativeX,
+					coordinateY : relativeY
+				});
 			}
 		);
 	},
