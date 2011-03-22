@@ -24,7 +24,8 @@ def ImageViewer(request, **kwargs):
           'viewer.js', 'brainData.js', 'canvasRenderer.js', 
           'crosshairsRenderer.js', 'interface.js', 'rendererInterface.js',
           'urlParameters.js', 'eventBindings.js', 'backgroundRenderer.js',
-          'jquery-ui-1.8.10.custom.min.js']
+          'jquery-ui-1.8.10.custom.min.js', 'modernizr-1.7.min.js',
+          'canvasCache.js']
 
     js = [ settings.MEDIA_URL + "javascripts/" + file for file in js]
     

@@ -20,8 +20,9 @@ var viewer = {
 	 * @param backgrounds - object that responds to coronal, sagittal, and axial.
 	 * 						contains the background arrays for each canvas.
 	 */
-	init: function(imageURL, canvases, texts, thresholds, backgroundFillCallback,
-			backgrounds) {
+	init: function(imageURL, canvases, texts, thresholds,backgroundFillCallback,
+		backgrounds, storageCallback, retrievalCallback) {
+			
 		if(this.instantiated){
 			return;
 		}
@@ -49,6 +50,27 @@ var viewer = {
 		this.textOutput.voxelObject = $(texts.voxel).first()[0];
 		this.textOutput.urlObject = $(texts.url).first()[0];
 		this.textOutput.thresholdObject = $(texts.threshold).first()[0];
+			
+		//check if the store and retrieve functions are set
+		if(storageCallback != null && typeof storageCallback == 'function'
+			&& retrievalCallback != null && typeof retrievalCallback == 'function'){
+			//both are set and both are functions, we can create cache objects
+			this.caches.coronalCache = new canvasCache(
+				this.canvases.coronalCanvas,
+				storageCallback,
+				retrievalCallback
+			);
+			this.caches.sagittalCache = new canvasCache(
+				this.canvases.sagittalCanvas,
+				storageCallback,
+				retrievalCallback
+			);
+			this.caches.axialCache = new canvasCache(
+				this.canvases.axialCanvas,
+				storageCallback,
+				retrievalCallback
+			);
+		}
 		
 		//load the renderers into the viewer
 		this.renderers.coronalRenderer =
@@ -56,21 +78,27 @@ var viewer = {
 				this.brainImage,
 				this.brainImage.getCoronalData, 
 				this.canvases.coronalCanvas, 'Coronal', 4,
-				backgroundFillCallback
+				backgroundFillCallback,
+				null,
+				this.caches.coronalCache
 			);
 		this.renderers.sagittalRenderer = 		
 			new brainOrientationRenderer(
 				this.brainImage,
 				this.brainImage.getSagittalData,
 				this.canvases.sagittalCanvas, 'Sagittal', 4,
-				backgroundFillCallback
+				backgroundFillCallback,
+				null,
+				this.caches.sagittalCache
 			);
 		this.renderers.axialRenderer =	
 			new brainOrientationRenderer(
 				this.brainImage,
 				this.brainImage.getAxialData,
 				this.canvases.axialCanvas, 'Axial', 4,
-				backgroundFillCallback
+				backgroundFillCallback,
+				null,
+				this.caches.axialCache
 			);
 		this.renderers.coronalCrosshairs = 
 			new crosshairsRenderer(
@@ -315,6 +343,12 @@ var viewer = {
 		coronalBackgroundRenderer: null,
 		sagittalBackgroundRenderer : null,
 		axialBackgroundRenderer : null
+	},
+	
+	caches: {
+		coronalCache : null,
+		sagittalCache : null,
+		axialCache : null
 	},
 	
 	textOutput : {
@@ -692,6 +726,9 @@ var viewer = {
 		);
 	},
 	
+	/*
+	 * Namespace for static functions/helper functions
+	 */
 	staticFunctions :{
 		
 		resolveCrosshairCoords: function(canvas, event){

@@ -8,14 +8,36 @@ $(window).load(function(){
 	/* global viewer: false, image_id_to_load: false, Math: false,
 	 * loadJsonDataFromLocation: false, brainData: false, $: true
 	 */ 
-	 
+	
+	var store = null;
+	var retrieve = null;
+	
 	if(document.createElement('canvas').getContext == undefined){
  		alert('Your browser does not support the HTML5 <canvas> element.'+
  		' This application will not work on your browser. Please use IE9, '+
  		'Firefox 3.0+, Safari 3.0+, Chrome 3.0+, or Opera 10.0+');
  		return;
  	}
- 
+ 	
+ 	if(document.createElement('canvas').toDataURL != undefined &&
+ 		Modernizr.localstorage){
+ 		//if we can write out images as a data url and have access to
+ 		//window.localStorage, then slice caching is possible
+ 		
+		store = function(key,value){
+			try{
+				window.localStorage[key] = value;
+				return key;
+			}catch(error){
+				return false;
+			}
+		};
+		retrieve = function(key){
+			return window.localStorage[key];
+		};
+ 	}
+ 	
+
 	
 	 
 	
@@ -112,7 +134,7 @@ $(window).load(function(){
 	
 	//the viewer constructor
 	viewer.init(imageUrl, canvasObjects, textObjects, thresholds,
-		backgroundFillCallback,	backgrounds);
+		backgroundFillCallback,	backgrounds, store, retrieve);
 
 			
 	var clickEvent = $.Event('click');

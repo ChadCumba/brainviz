@@ -21,7 +21,7 @@
  * 										is complete.
  */
 function brainOrientationRenderer(brainDataObject, brainDataCallback, canvasObject, orientationLabel,
-									 pixelSize, fillCallback,renderingCompleteCallback){
+									 pixelSize, fillCallback,renderingCompleteCallback, cacheObject){
 	//implements Renderer
 	
 	//extend the renderer class
@@ -49,6 +49,8 @@ function brainOrientationRenderer(brainDataObject, brainDataCallback, canvasObje
 	this.pixelSize = pixelSize;
 	
 	this.fillCallback = fillCallback;
+	
+	var cache = cacheObject;
 	
 	var lastSlice = null;
 	
@@ -137,8 +139,16 @@ function brainOrientationRenderer(brainDataObject, brainDataCallback, canvasObje
 	 * Currently there is no caching enabled, so it does the same thing
 	 * as renderSlice 
 	 */
-	function getSlice(sliceToRetrieve){
-		renderSlice.apply(this,[sliceToRetrieve]);
+	function getSlice(thresholdKey,sliceToRetrieve){
+		
+		var imgElement = null;
+		
+		if(this.renderedSlices[thresholdKey] != undefined && cache != null){
+			imgElement = cache.getByKey(
+				this.renderedSlices[thresholdKey][sliceToRetrieve]
+			);
+		}
+		return imgElement;
 	};
 	/*
 	 * @param sliceToRender - int desscribing the slice to render
@@ -149,8 +159,18 @@ function brainOrientationRenderer(brainDataObject, brainDataCallback, canvasObje
 		
 		render2dMatrixToContext.apply(this,
 			[this.getBrainData.apply(this.brainObject, [sliceToRender]), 
-			this.context, this.pixelSize, this.fillCallback, threshold])
-		this.renderedSlices.push(sliceToRender);
+			this.context, this.pixelSize, this.fillCallback, threshold]);
+		
+		if(this.renderedSlices[threshold] == undefined){
+			this.renderedSlices[threshold] = [];
+		}
+			
+		this.renderedSlices[threshold][sliceToRender] = cache.cacheCurrent();
+		
+		if(this.renderingComplete != null &&
+			 typeof this.renderingComplete === 'function'){
+			this.renderingComplete(this);
+		}
 	};
 	/*
 	 * displaySlice is the only function that you need to access on this object.
@@ -158,22 +178,50 @@ function brainOrientationRenderer(brainDataObject, brainDataCallback, canvasObje
 	 * @param sliceIndex - the index of the slice to display
 	 */
 	this.displaySlice = function(sliceIndex){
-		if($.inArray(sliceIndex, this.renderedSlices)){
-			//we call this function with 'apply' as it exists as a private member
-			//and thus 'this', when inside getSlice, will refer to the window
-			//instead of the object. Apply overrides this behavior
-			getSlice.apply(this,[sliceIndex]);
+		
+		var thresholdKey;
+		
+		if(threshold == null){
+			thresholdKey = 'null';
+		}else{
+			thresholdKey = threshold;
+		}
+		
+		if(this.renderedSlices[thresholdKey] != undefined && cache !== null){
+			
+			if( this.renderedSlices[thresholdKey][sliceIndex] !== undefined){
+				//we call this function with 'apply' as it exists as a private member
+				//and thus 'this', when inside getSlice, will refer to the window
+				//instead of the object. Apply overrides this behavior
+				var imgToRender = getSlice.apply(this,[thresholdKey,sliceIndex]);
+				var imgElement = document.createElement('img');
+				imgElement.src=imgToRender;
+				$(imgElement).bind(
+					'load',
+					{
+						that : this
+					},
+					function(event){
+						event.data.that.context.drawImage(imgElement,0,0,
+							event.data.that.getCanvasWidth(),
+							event.data.that.getCanvasHeight());
+						if(event.data.that.renderingComplete != null &&
+							typeof event.data.that.renderingComplete === 'function'){
+							event.data.that.renderingComplete(event.data.that);
+						}
+					}
+				);
+				
+			}else{
+				renderSlice.apply(this,[sliceIndex]);
+			}
+			
 		}else{
 			//same deal as above
 			renderSlice.apply(this,[sliceIndex]);
 		}
 		
 		lastSlice = sliceIndex;
-		
-		if(this.renderingComplete != null &&
-			 typeof this.renderingComplete === 'function'){
-			this.renderingComplete(this);
-		}
 
 	};
 	
