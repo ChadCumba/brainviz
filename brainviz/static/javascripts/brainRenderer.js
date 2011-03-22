@@ -139,15 +139,41 @@ function brainOrientationRenderer(brainDataObject, brainDataCallback, canvasObje
 	 * Currently there is no caching enabled, so it does the same thing
 	 * as renderSlice 
 	 */
-	function getSlice(thresholdKey,sliceToRetrieve){
+	function getSlice(thresholdKey,sliceToRetrieve, imageLoadedCallback){
 		
-		var imgElement = null;
+		/*
+		 * CSS ID's can't have periods. thresholdKey may be a floating point
+		 * thus we remove the periods from it just in case
+		 */
+		thresholdKeyNoPeriods = ''+thresholdKey;
+		thresholdKeyNoPeriods = thresholdKeyNoPeriods.replace('.','');
+		
+		//if the image we're looking for is already in the DOM, serve it
+		if($('#'+this.label  + thresholdKeyNoPeriods  + sliceToRetrieve).length === 1){
+			
+			$('#'+this.label  + thresholdKeyNoPeriods  + sliceToRetrieve).one(
+				'load',{that:this, image:$('#'+this.label  + thresholdKeyNoPeriods  + sliceToRetrieve)[0] },
+				imageLoadedCallback).triggerHandler('load');
+			
+			return $('#'+this.label  + thresholdKeyNoPeriods  + sliceToRetrieve)[0];
+		}
+
+		//at this point we're sure its not in the DOM, so we'll have to pull it 
+		//from the cache, create it, and attach it to the DOM.
+		var imgElement = document.createElement('img');
 		
 		if(this.renderedSlices[thresholdKey] != undefined && cache != null){
-			imgElement = cache.getByKey(
+			imgElement.src = cache.getByKey(
 				this.renderedSlices[thresholdKey][sliceToRetrieve]
 			);
 		}
+		
+		imgElement.id = this.label + thresholdKeyNoPeriods + sliceToRetrieve;
+		
+		$(imgElement).one('load', {that: this, image:imgElement},
+			imageLoadedCallback).hide();
+		
+		$('body').append(imgElement);
 		return imgElement;
 	};
 	/*
@@ -190,27 +216,22 @@ function brainOrientationRenderer(brainDataObject, brainDataCallback, canvasObje
 		if(this.renderedSlices[thresholdKey] != undefined && cache !== null){
 			
 			if( this.renderedSlices[thresholdKey][sliceIndex] !== undefined){
+				
+				imgLoadedCallback = function(event){
+					event.data.that.context.drawImage(event.data.image,0,0,
+						event.data.that.getCanvasWidth(),
+						event.data.that.getCanvasHeight());
+					if(event.data.that.renderingComplete != null &&
+						typeof event.data.that.renderingComplete === 'function'){
+						event.data.that.renderingComplete(event.data.that);
+					}
+				};
+				
 				//we call this function with 'apply' as it exists as a private member
 				//and thus 'this', when inside getSlice, will refer to the window
 				//instead of the object. Apply overrides this behavior
-				var imgToRender = getSlice.apply(this,[thresholdKey,sliceIndex]);
-				var imgElement = document.createElement('img');
-				imgElement.src=imgToRender;
-				$(imgElement).bind(
-					'load',
-					{
-						that : this
-					},
-					function(event){
-						event.data.that.context.drawImage(imgElement,0,0,
-							event.data.that.getCanvasWidth(),
-							event.data.that.getCanvasHeight());
-						if(event.data.that.renderingComplete != null &&
-							typeof event.data.that.renderingComplete === 'function'){
-							event.data.that.renderingComplete(event.data.that);
-						}
-					}
-				);
+				var imgElement = getSlice.apply(this,[thresholdKey,sliceIndex,
+					imgLoadedCallback]);
 				
 			}else{
 				renderSlice.apply(this,[sliceIndex]);

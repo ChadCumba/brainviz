@@ -182,6 +182,10 @@ var viewer = {
 		this.listeners.updateThresholds.subscribe(
 			this.publishers.onThresholdChange
 		);
+		
+		this.listeners.clearRenderedSlices.subscribe(
+			this.publishers.localStorageCleared
+		);
 	
 		
 		//sets the click handling bindings
@@ -242,7 +246,8 @@ var viewer = {
 		onSagittalRenderingComplete : new Publisher(),
 		onAxialRenderingComplete : new Publisher(),
 		onCrosshairChange : new Publisher(),
-		onThresholdChange : new Publisher()
+		onThresholdChange : new Publisher(),
+		localStorageCleared : new Publisher()
 	},
 	
 	/*
@@ -390,6 +395,12 @@ var viewer = {
 			};
 			
 			viewer.renderers.axialBackgroundRenderer.render(data.axialSlice);
+		},
+		
+		clearRenderedSlices : function(){
+			viewer.renderers.coronalRenderer.renderedSlices = [];
+			viewer.renderers.sagittalRenderer.renderedSlices = [];
+			viewer.renderers.axialRenderer.renderedSlices = [];
 		}
 	},
 	

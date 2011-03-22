@@ -33,6 +33,7 @@ $(window).load(function(){
 				//if that doesn't work we'll just let the exception bubble up
 				//because something is seriously wrong.
 				window.localStorage.clear();
+				viewer.publishers.localStorageCleared.deliver();
 				window.localStorage[key] = value;
 				return key;
 			}
