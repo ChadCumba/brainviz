@@ -190,8 +190,11 @@ function brainOrientationRenderer(brainDataObject, brainDataCallback, canvasObje
 		if(this.renderedSlices[threshold] == undefined){
 			this.renderedSlices[threshold] = [];
 		}
-			
-		this.renderedSlices[threshold][sliceToRender] = cache.cacheCurrent();
+		
+		if(cache !== null){
+			this.renderedSlices[threshold][sliceToRender] = cache.cacheCurrent();
+		}
+		
 		
 		if(this.renderingComplete != null &&
 			 typeof this.renderingComplete === 'function'){
@@ -213,25 +216,32 @@ function brainOrientationRenderer(brainDataObject, brainDataCallback, canvasObje
 			thresholdKey = threshold;
 		}
 		
-		if(this.renderedSlices[thresholdKey] != undefined && cache !== null){
+		if(this.renderedSlices[thresholdKey] != undefined && cache !== null ){
 			
 			if( this.renderedSlices[thresholdKey][sliceIndex] !== undefined){
 				
-				imgLoadedCallback = function(event){
-					event.data.that.context.drawImage(event.data.image,0,0,
-						event.data.that.getCanvasWidth(),
-						event.data.that.getCanvasHeight());
-					if(event.data.that.renderingComplete != null &&
-						typeof event.data.that.renderingComplete === 'function'){
-						event.data.that.renderingComplete(event.data.that);
-					}
-				};
+				if( this.renderedSlices[thresholdKey][sliceIndex] !== null){
+				//if the rendered slice section is defined and it is not null
+				//then we have rendered it before and thus can call it back to
+				//be loaded.
+					imgLoadedCallback = function(event){
+						event.data.that.context.drawImage(event.data.image,0,0,
+							event.data.that.getCanvasWidth(),
+							event.data.that.getCanvasHeight());
+						if(event.data.that.renderingComplete != null &&
+							typeof event.data.that.renderingComplete === 'function'){
+							event.data.that.renderingComplete(event.data.that);
+						}
+					};
 				
 				//we call this function with 'apply' as it exists as a private member
 				//and thus 'this', when inside getSlice, will refer to the window
 				//instead of the object. Apply overrides this behavior
-				var imgElement = getSlice.apply(this,[thresholdKey,sliceIndex,
-					imgLoadedCallback]);
+					var imgElement = getSlice.apply(this,[thresholdKey,sliceIndex,
+						imgLoadedCallback]);
+				}
+				
+				
 				
 			}else{
 				renderSlice.apply(this,[sliceIndex]);
