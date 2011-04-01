@@ -63,14 +63,17 @@ def ImageViewer(request, **kwargs):
         path.join(settings.MEDIA_ROOT, 'backgrounds', 'coronal'))
     coronal_backgrounds = [ settings.MEDIA_URL + "backgrounds/coronal/" + file
                            for file in coronal_backgrounds]
+    coronal_backgrounds.sort()
     sagittal_backgrounds = listdir(
         path.join(settings.MEDIA_ROOT, 'backgrounds', 'sagittal'))
     sagittal_backgrounds = [ settings.MEDIA_URL + "backgrounds/sagittal/" + file
                            for file in sagittal_backgrounds]
+    sagittal_backgrounds.sort()
     axial_backgrounds = listdir(
         path.join(settings.MEDIA_ROOT, 'backgrounds', 'axial'))
     axial_backgrounds = [ settings.MEDIA_URL + "backgrounds/axial/" + file
                            for file in axial_backgrounds]
+    axial_backgrounds.sort()
     
     return render_to_response(
         'image/canvas.html',
