@@ -19,7 +19,7 @@
             Page {{ images.number }} of {{ images.paginator.num_pages }}.
         </span>
 
-        {% if contacts.has_next %}
+        {% if images.has_next %}
             <a href="?page={{ images.next_page_number }}">next</a>
         {% endif %}
     </span>
