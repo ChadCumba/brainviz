@@ -2,8 +2,10 @@
  * @TODO as this application has grown, the onload function has turned into a 
  * defacto constructor for the viewer singleton. We need to refactor this into
  * a constructor for the singleton instead of this bit of a mess
+ * 
+ * This is the only function in the app that has knowledge of the DOM. 
  */
-$(window).load(function(){
+function loadBrainvizWithSource(source){
 	
 	/* global viewer: false, image_id_to_load: false, Math: false,
 	 * loadJsonDataFromLocation: false, brainData: false, $: true
@@ -62,6 +64,10 @@ $(window).load(function(){
 		if(image_id_to_load != null){
 			imageUrl = imageUrl + "/" + image_id_to_load;
 		}
+	}
+	
+	if(source){
+		imageUrl = source;
 	}
 	
 
@@ -142,7 +148,14 @@ $(window).load(function(){
 	viewer.init(imageUrl, canvasObjects, textObjects, thresholds,
 		backgroundFillCallback,	backgrounds, store, retrieve);
 
-			
+	/*
+	 * if there was a location in the URL, then the easiest way to render it
+	 * is to artificially "click" on that spot on the canvas for the user. This
+	 * is because there are many events that are triggered in response to a 
+	 * click, and this way we don't have to trigger all those events individually
+	 * Here we're just creating a click event and immediately triggering it on
+	 * the corresponding canvas.
+	 */		
 	var clickEvent = $.Event('click');
 	clickEvent.relativeX = parseInt($_GET['clickX']);
 	clickEvent.relativeY = parseInt($_GET['clickY']);
@@ -179,7 +192,10 @@ $(window).load(function(){
 		default:
 			break;
 	}
-			
+	/*
+	 * same deal as above, but we don't need to trigger a click event for the 
+	 * threshold as there is only 1 callback to fire for the threshold changes
+	 */		
 	if($_GET['threshold'] == null){
 		viewer.publishers.onThresholdChange.deliver(viewer.brainImage.getMin());
 	}else{
@@ -189,4 +205,4 @@ $(window).load(function(){
 	//hide the spinny loader gif
 	$('#loading-image').hide();
 
-});
+};

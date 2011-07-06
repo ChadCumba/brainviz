@@ -1,5 +1,11 @@
 /**
  * @author Chad Cumba
+ * 
+ * @param canvasObject - an HTML <canvas> element
+ * @param storageCallback - callback takes 2 params, (key,data). Key is a string
+ * 							data is arbitrary data
+ * @param retrievalCallback - callback takes 1 param, (key). Key is a string,
+ * 								returns the data from above.
  */
 
 function canvasCache(canvasObject, storageCallback, retrievalCallback){

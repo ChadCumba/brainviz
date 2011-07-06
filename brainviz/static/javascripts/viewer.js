@@ -36,6 +36,10 @@ var viewer = {
 			}
 		}
 		
+		//compute the size of the brush (pixel) we'll be painting the canvases
+		//with
+		var brushSize = canvases.sagittal.width / i;
+		
 		//load the data into the viewer
 		this.brainImage = new brainData(heatMap.data, heatMap.max,
 											heatMap.min);
@@ -75,18 +79,18 @@ var viewer = {
 		//load the renderers into the viewer
 		this.renderers.coronalRenderer =
 			new brainOrientationRenderer(
-				this.brainImage,
-				this.brainImage.getCoronalData, 
-				this.canvases.coronalCanvas, 'Coronal', 4,
-				backgroundFillCallback,
-				null,
-				this.caches.coronalCache
+				this.brainImage, //image object reference
+				this.brainImage.getCoronalData, //image slice callback
+				this.canvases.coronalCanvas, 'Coronal', brushSize, //canvas info
+				backgroundFillCallback, //callback that generates the background
+				null, //callback to fire after rendering is complete (optional)
+				this.caches.coronalCache //a cache object that responds to store and retrieve
 			);
 		this.renderers.sagittalRenderer = 		
 			new brainOrientationRenderer(
 				this.brainImage,
 				this.brainImage.getSagittalData,
-				this.canvases.sagittalCanvas, 'Sagittal', 4,
+				this.canvases.sagittalCanvas, 'Sagittal', brushSize,
 				backgroundFillCallback,
 				null,
 				this.caches.sagittalCache
@@ -95,16 +99,16 @@ var viewer = {
 			new brainOrientationRenderer(
 				this.brainImage,
 				this.brainImage.getAxialData,
-				this.canvases.axialCanvas, 'Axial', 4,
+				this.canvases.axialCanvas, 'Axial', brushSize,
 				backgroundFillCallback,
 				null,
 				this.caches.axialCache
 			);
 		this.renderers.coronalCrosshairs = 
 			new crosshairsRenderer(
-				this.canvases.coronalCanvas,
-				1,
-				'#FFFFFF' //white
+				this.canvases.coronalCanvas, //canvas object
+				1, //thickness of the crosshair line in px
+				'#FFFFFF' //crosshair color - white
 			);
 		this.renderers.sagittalCrosshairs = 
 			new crosshairsRenderer(
@@ -124,7 +128,7 @@ var viewer = {
 				backgrounds.coronal,
 				this.canvases.coronalCanvas,
 				null,
-				'#000000'
+				'#000000' //black
 			);
 			
 		this.renderers.sagittalBackgroundRenderer = 
@@ -144,6 +148,10 @@ var viewer = {
 			);
 	
 		//subscribe the listeners to the event handlers
+		/*
+		 * this.listeners.whatever will be called and passed a data object 
+		 * when the publisher it is subscribed to is triggered
+		 */
 		this.listeners.updateSagittalCanvas.subscribe(
 			this.publishers.onAxialChange
 		);
@@ -189,12 +197,17 @@ var viewer = {
 	
 		
 		//sets the click handling bindings
+		// reference the function header for more info
 		this.setEventBindings();
 		
 		if(thresholds.value == null){
 			thresholds.value = this.brainImage.getMin();
 		}
 		
+		/*
+		 * build the threshold slider, including its event bindings and click
+		 * behavior. 
+		 */
 		$(thresholds.slider).slider({max: this.brainImage.getMax(),
 			min : this.brainImage.getMin(),
 			value : thresholds.value,
@@ -225,12 +238,20 @@ var viewer = {
 			} 
 		);
 		
+		//prevents this function from being called twice and royally screwing
+		//things up
 		this.instantiated = true;
 		
 	},
 	
 	constants : {
-		coordinateMultiplier : 1.5,
+		//the data we have is in 60x72x60 rez, but the system is pretending that
+		//it is in 90x109x90 rez. The multiplier fixes the X, Y, and Z coords
+		//that are reported to the higher rez.
+		coordinateMultiplier : 1.5, 
+		//these are the dimensions of the original file.
+		//@TODO - these need to be removed and replaced with a system that 
+		//detects the dimensionality automatically
 		smallDimension : 91,
 		largeDimension : 109
 	},
@@ -307,7 +328,15 @@ var viewer = {
 						viewer.renderers.axialRenderer.pixelSize;
 					break;
 			}
-			 
+			/*
+			 * every child of 'renderer' has a 'renderingComplete' callback 
+			 * function that is triggered when it is done rendering the current
+			 * view. To ensure that the background is drawn first, then the 
+			 * heatmap, then the crosshairs, we attach the render function for 
+			 * the next step as the renderingComplete callback for the previous
+			 * step. This technique is replicated in each of the update__Canvas
+			 * functions.
+			 */
 			viewer.renderers.sagittalBackgroundRenderer.renderingComplete = function(){
 				viewer.renderers.sagittalRenderer.render(data.sagittalSlice);
 			};
@@ -426,6 +455,8 @@ var viewer = {
 	/*
 	 * the renderers that will display the data
 	 * these need to be instantiated after the data has been loaded.
+	 * Each renderer must implement the 'render' interface or the app will 
+	 * throw a fatal error
 	 */
 	renderers : {
 		coronalRenderer : null,
@@ -439,12 +470,19 @@ var viewer = {
 		axialBackgroundRenderer : null
 	},
 	
+	/*
+	 * the cache objects stubs
+	 * these all get set in this.init based on what is passed in to 'init'
+	 */
 	caches: {
 		coronalCache : null,
 		sagittalCache : null,
 		axialCache : null
 	},
 	
+	/*
+	 * objects that we'll be writing text data into
+	 */
 	textOutput : {
 		coordinateObject : null,
 		voxelObject : null,
@@ -452,6 +490,10 @@ var viewer = {
 		thresholdObject: null
 	},
 	
+	/*
+	 * current slider threshold. any pixels that contain a value lower than 
+	 * the current value of threshold will not be rendered
+	 */
 	threshold : null,
 	
 	/*
@@ -494,7 +536,10 @@ var viewer = {
 					[Math.floor(sagSlice)]
 					[Math.floor(axSlice)];
 				
-				
+				/*
+				 * deliver the data object since the crosshairs are going to 
+				 * change
+				 */
 				viewer.publishers.onCrosshairChange.deliver({
 					'coordX' : Math.floor(event.data.coronalRenderer.getLastSlice() *
 						event.data.constants.coordinateMultiplier),
@@ -512,6 +557,10 @@ var viewer = {
 					viewer.threshold
 				});
 			
+				/*
+				 * this resets each of the canvases so that we have a clean
+				 * canvas to draw the new images on
+				 */
 				event.data.canvases.coronalCanvas.width = 
 					event.data.canvases.coronalCanvas.width;
 				event.data.canvases.sagittalCanvas.width = 
@@ -520,13 +569,8 @@ var viewer = {
 					event.data.canvases.axialCanvas.width;
 				
 				/*
-				 * it would be more clear to deliver an object below,
-				 * however many versions of IE do not support for ... in syntax
-				 * and thus we are using a list so that we can iterate over it
-				 * 
-				 * Note that in addition to the list of renderingGroups we are
-				 * also passing on the event data. The current implementation does 
-				 * not use it, but it may be useful to other subscribers down the road.
+				 * We're delivering a lot of data here, much of which is not 
+				 * actually used, but could be useful down the road.
 				 */
 				event.data.publishers.onCoronalChange.deliver({
 					canvasChange : 'coronal',
