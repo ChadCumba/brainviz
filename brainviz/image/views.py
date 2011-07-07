@@ -19,13 +19,13 @@ def Upload(request):
 
 def ImageViewer(request, **kwargs):
     js = ['jquery-1.4.2.min.js', 'loadData.js', 'playground.js',
-          'events.js', 'extend.js', 'onLoad.js',
+          'events.js', 'extend.js', 'loadViewer.js',
           'brainRenderer.js', 'js16Additions.js', 'observer.js',
           'viewer.js', 'brainData.js', 'canvasRenderer.js', 
           'crosshairsRenderer.js', 'interface.js', 'rendererInterface.js',
           'urlParameters.js', 'eventBindings.js', 'backgroundRenderer.js',
           'jquery-ui-1.8.10.custom.min.js', 'modernizr-1.7.min.js',
-          'canvasCache.js']
+          'canvasCache.js', 'windowOnLoad.js']
 
     js = [ settings.MEDIA_URL + "javascripts/" + file for file in js]
     
@@ -127,6 +127,21 @@ def ImageData(request, **kwargs):
     json_data = image.brain_image.readlines()
     
     return HttpResponse(json_data, mimetype='application/json')
+
+@gzip_page
+def CrossSiteImageData(request, **kwargs):
+    
+    if 'image_id' in kwargs:
+        image_id = kwargs['image_id']
+    else:
+        image_id = 1
+
+    image = ThreeDimensional.objects.get(id = image_id)
+    
+    json_data = image.brain_image.readlines()
+    
+    return HttpResponse('loadBrainvizWithData('+ json_data[0] +');',
+                            mimetype='text/javascript')
 
 def ImageListing(request):
     image_list = ThreeDimensional.objects.all()

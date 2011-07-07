@@ -5,7 +5,7 @@
  * 
  * This is the only function in the app that has knowledge of the DOM. 
  */
-function loadBrainvizWithSource(source){
+function loadBrainvizWithData(data){
 	
 	/* global viewer: false, image_id_to_load: false, Math: false,
 	 * loadJsonDataFromLocation: false, brainData: false, $: true
@@ -21,8 +21,9 @@ function loadBrainvizWithSource(source){
  		return;
  	}
  	
- 	if(document.createElement('canvas').toDataURL != undefined &&
- 		Modernizr.localstorage){
+ 	
+	if(document.createElement('canvas').toDataURL != undefined &&
+	Modernizr.localstorage){
  		//if we can write out images as a data url and have access to
  		//window.localStorage, then slice caching is possible
  		
@@ -43,7 +44,9 @@ function loadBrainvizWithSource(source){
 		retrieve = function(key){
 			return window.localStorage[key];
 		};
- 	}
+	}
+ 	
+ 	
  	
 
 	
@@ -52,24 +55,7 @@ function loadBrainvizWithSource(source){
 	//show the loading image twirling thing
 	$('#loading-image').removeClass('hidden').attr('style', 
 		'position:relative;top:270px;');
-	
-	var imageUrl = '/image/getimage';
-	
-	/*
-	 * image_id_to_load is inserted (optionally) by the canvas.html template
-	 * file. Naming convention on variables inserted by django is 
-	 * verbose_with_underscores so that they stand out against regular variables
-	 */
-	if(image_id_to_load != undefined){
-		if(image_id_to_load != null){
-			imageUrl = imageUrl + "/" + image_id_to_load;
-		}
-	}
-	
-	if(source){
-		imageUrl = source;
-	}
-	
+		
 
 	var canvasObjects = {};
 	var textObjects = {};
@@ -145,7 +131,7 @@ function loadBrainvizWithSource(source){
 	thresholds.orientation = "vertical";
 	
 	//the viewer constructor
-	viewer.init(imageUrl, canvasObjects, textObjects, thresholds,
+	viewer.init(data, canvasObjects, textObjects, thresholds,
 		backgroundFillCallback,	backgrounds, store, retrieve);
 
 	/*

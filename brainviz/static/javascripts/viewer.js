@@ -20,14 +20,14 @@ var viewer = {
 	 * @param backgrounds - object that responds to coronal, sagittal, and axial.
 	 * 						contains the background arrays for each canvas.
 	 */
-	init: function(imageURL, canvases, texts, thresholds,backgroundFillCallback,
+	init: function(rawImageData, canvases, texts, thresholds,backgroundFillCallback,
 		backgrounds, storageCallback, retrievalCallback) {
 			
 		if(this.instantiated){
 			return;
 		}
 		
-		var heatMap = loadJsonDataFromLocation(imageURL);
+		var heatMap = rawImageData;
 		
 		for(var i = 0; i < heatMap.data.length; i++){
 			heatMap.data[i].reverse();
