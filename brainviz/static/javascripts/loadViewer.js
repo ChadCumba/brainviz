@@ -121,8 +121,10 @@ function loadBrainvizWithData(data){
 		
 		$_GET['axis'] = 'coronal';
 		$_GET['slice'] = 30;
-		$_GET['clickX'] = 120;
-		$_GET['clickY'] = 144;
+		
+		
+		$_GET['clickX'] = $('#coronal').height() / 2;
+		$_GET['clickY'] = $('#coronal').width() / 2;
 		$_GET['threshold'] = null;
 	}
 	
