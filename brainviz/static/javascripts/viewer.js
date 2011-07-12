@@ -739,8 +739,8 @@ var viewer = {
 				relativeX = event.relativeX;
 				relativeY = event.relativeY;
 			}else{
-				relativeX = event.pageX - offset.left - 1;
-				relativeY = event.pageY - offset.top - 1;
+				relativeX = event.pageX - Math.floor(offset.left) - 1;
+				relativeY = event.pageY - Math.floor(offset.top) - 1;
 			}
 			return {'relativeX' : relativeX, 'relativeY' : relativeY};
 		},
