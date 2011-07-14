@@ -403,7 +403,7 @@ var viewer = {
 				case 'coronal':
 					xCoord = viewer.renderers.coronalRenderer.getLastSlice() * 
 						viewer.renderers.coronalRenderer.pixelSize;
-					yCoord = data.coordinateY;
+					yCoord = data.coordinateX;
 					break;
 				case 'sagittal':
 					xCoord = data.coordinateX;
