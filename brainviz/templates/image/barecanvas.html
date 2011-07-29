@@ -1,0 +1,73 @@
+{% extends "generic/bare.html" %}
+
+{% block header_additions %}
+	<script type="text/javascript" >
+		var image_id_to_load = {{image_id}};
+	</script>
+{% endblock %}
+
+{% block content %}
+	
+	<div id="brain-viewer">
+		<img id ="loading-image" src="{{STATIC_URL}}viewerimages/spinner.gif" class="hidden">
+		<div id="sagittal-container" class="viewer brain-image">
+			<p class="label top">S</p><p class="label right">R</p>
+			<canvas id="sagittal" width="240" height="240"></canvas>
+			<p class="label left">L</p><p class="label bottom">I</p>
+		</div>
+		<div id="coronal-container" class="viewer brain-image">
+			<p class="label top">S</p><p class="label right">A</p>
+			<canvas id="coronal" width="288" height="240"></canvas>
+			<p class="label left coronal-label">P</p><p class="label bottom">I</p>
+		</div>
+		<div id="axial-container" class="viewer brain-image">
+			<p class="label top">A</p><p class="label right">R</p>
+			<canvas id="axial" width="240" height="288"></canvas>
+			<p class="label left">L</p><p class="label bottom">P</p>
+		</div>
+		<div id="metadata-container" class="viewer data">
+			<div class="data wrapper-left">
+				<div id="coords" class="plaintext data">
+				Location:
+					<p>
+					</p>
+				</div>
+				<div id="voxel-data" class="plaintext data">
+				Value:
+					<p></p>
+				</div>
+				<div id="threshold-value" class="plaintext data">
+				Current Threshold:
+					<p></p>
+				</div>
+			</div>
+			<div class="data wrapper-right">
+				Threshold
+				<div id="slider" class="widget">
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div id="permanent-url" class="plaintext url">
+		<a href=""></a>
+	</div>
+	
+	<div id="coronal-backgrounds" class="hidden">
+		{% for image in coronal_backgrounds %}
+			<img src="{{image}}" class="hidden image">
+		{% endfor %}
+	</div>
+	<div id="sagittal-backgrounds" class="hidden">
+		{% for image in sagittal_backgrounds %}
+			<img src="{{image}}" class="hidden image">
+		{% endfor %}
+	</div>
+	<div id="axial-backgrounds" class="hidden">
+		{% for image in axial_backgrounds %}
+			<img src="{{image}}" class="hidden image">
+		{% endfor %}
+	</div>
+	{{content}}
+{% endblock %}

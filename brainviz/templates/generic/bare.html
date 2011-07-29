@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+	<!--
+	IE's stated behavior is to determine page type from the doctype. However,
+	various settings will display pages in quirksmode regardless. As this site
+	does not work in quirksmode, I'm including conditional comments to force 
+	html5 mode. The IE docs claim that this is unnecessary, but testing has 
+	proven otherwise.
+	
+	On a side note, their "Make web not war" campaign to reach out to developers
+	appears to be falling apart again. I thought we were done with this type of
+	garbage.
+	-->
+	
+	<!--[if IE]>
+	<meta http-equiv="X-UA-Compatible" content="IE=100">
+	<![endif]-->	
+	
+    {% block styles %}
+      {% for sheet in styles %}
+<LINK REL=StyleSheet HREF="{{sheet}}" TYPE="text/css" MEDIA=screen>
+      {% endfor %}
+
+    {% endblock %}
+    {% block javascript %}
+        {% for file in js %}
+<script type="text/javascript" src="{{file}}"></script>
+        {% endfor %}
+    {% endblock %}
+    {% block header_additions %}
+    {% endblock %}
+    <title>{% block title %}{{title}}{% endblock %}</title>
+</head>
+
+<body>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div id="content">
+        {% block content %}
+                {{content}}
+        {% endblock %}
+    </div>
+</body>
+</html>

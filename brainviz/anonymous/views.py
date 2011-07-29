@@ -67,5 +67,5 @@ def AnonymousImageDispatch(request, **kwargs):
     return render_to_response("anonymous/dispatch.html", {
         'link': image.get_fq_url(),
         'javascript': reverse('brainviz.anonymous.views.EmbedJavascriptById', kwargs={'image_id':image.id}),
-        'iframe' : '<iframe src="'+ image.get_fq_url() +'" height="100%" width="100%"></iframe>'
+        'iframe' : '<iframe src="'+ image.get_fq_url() +'?bare=true" height="100%" width="100%"></iframe>'
     }, context_instance=RequestContext(request))

@@ -7,8 +7,8 @@
       {% for sheet in styles %}
 <LINK REL=StyleSheet HREF="{{sheet}}" TYPE="text/css" MEDIA=screen>
       {% endfor %}
-
     {% endblock %}
+<LINK REL=StyleSheet HREF="/static/styles/generic.css" TYPE="text/css" MEDIA=screen>
     {% block javascript %}
         {% for file in js %}
 <script type="text/javascript" src="{{file}}"></script>
@@ -39,10 +39,9 @@
   <tr>
     <td width="100%">
       <p align="left"><font color="#F0D8B8" face="Arial" size="2"><b>&nbsp;&nbsp;
-      <a href="/">Home</a>&nbsp;&nbsp; |&nbsp;&nbsp; <a href="/anonymous/upload">Upload an image</a>&nbsp;&nbsp; |&nbsp;&nbsp;
-      <a href="/faq">FAQ</a>&nbsp;&nbsp; |&nbsp;&nbsp; <a href="/signup">Create an account</a>&nbsp;&nbsp; |&nbsp;&nbsp;
-      <a href="/admin">Login</a>&nbsp;&nbsp; |&nbsp;&nbsp; <a></a>&nbsp;&nbsp; |&nbsp;&nbsp;
-      <a></a></b></font></td>
+      <a href="/" class="navlink">Home</a>&nbsp;&nbsp; |&nbsp;&nbsp; <a href="/anonymous/upload" class="navlink">Upload an image</a>&nbsp;&nbsp; |&nbsp;&nbsp;
+      <a href="/faq" class="navlink">FAQ</a>&nbsp;&nbsp; |&nbsp;&nbsp; <a href="/signup" class="navlink">Create an account</a>&nbsp;&nbsp; |&nbsp;&nbsp;
+      <a href="/admin" class="navlink">Login</a></b></font></td>
   </tr>
 </table>
 <p align="left" style="margin-left: 20"><font face="Arial" color="#000000" size="4">
