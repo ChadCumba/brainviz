@@ -1,0 +1,26 @@
+<!--
+Chad Cumba
+Chad.Cumba@mail.utexas.edu
+Developed in the Poldrack Lab at the University of Texas at Austin
+-->
+{% extends "generic/base.html" %}
+
+{% block title %}Upload an Image{% endblock %}
+
+
+
+{% block content %}
+      <h1>Upload a brain image</h1>
+      <form enctype="multipart/form-data" action="{% url anonymous.views.AnonymousUploadForm %}" method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            {% if not field.is_hidden %}
+            <div class="fieldWrapper">
+                {{ field.errors }}
+                {{ field.label_tag }}: {{ field }}
+            </div>
+            {% endif %}
+        {% endfor %}
+        <input type="submit">
+      </form>
+{% endblock %}

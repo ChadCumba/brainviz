@@ -1,0 +1,415 @@
+  
+      
+	
+	<div id="brain-viewer">
+		<img id ="loading-image" src="/static/viewerimages/spinner.gif" class="hidden">
+		<div id="sagittal-container" class="viewer brain-image">
+			<p class="label top">S</p><p class="label right">R</p>
+			<canvas id="sagittal" width="240" height="240"></canvas>
+			<p class="label left">L</p><p class="label bottom">I</p>
+		</div>
+
+		<div id="coronal-container" class="viewer brain-image">
+			<p class="label top">S</p><p class="label right">A</p>
+			<canvas id="coronal" width="288" height="240"></canvas>
+			<p class="label left coronal-label">P</p><p class="label bottom">I</p>
+		</div>
+		<div id="axial-container" class="viewer brain-image">
+			<p class="label top">A</p><p class="label right">R</p>
+
+			<canvas id="axial" width="240" height="288"></canvas>
+			<p class="label left">L</p><p class="label bottom">P</p>
+		</div>
+		<div id="metadata-container" class="viewer data">
+			<div class="data wrapper-left">
+				<div id="coords" class="plaintext data">
+				Location:
+					<p>
+
+					</p>
+				</div>
+				<div id="voxel-data" class="plaintext data">
+				Value:
+					<p></p>
+				</div>
+				<div id="threshold-value" class="plaintext data">
+				Current Threshold:
+					<p></p>
+				</div>
+
+			</div>
+			<div class="data wrapper-right">
+				Threshold
+				<div id="slider" class="widget">
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div id="permanent-url" class="plaintext url">
+
+		<a href=""></a>
+	</div>
+	
+	<div id="coronal-backgrounds" class="hidden">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal05.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal06.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal07.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal08.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal09.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal10.png" class="hidden image">
+
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal11.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal12.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal13.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal14.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal15.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal16.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal17.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal18.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal19.png" class="hidden image">
+
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal20.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal21.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal22.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal23.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal24.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal25.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal26.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal27.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal28.png" class="hidden image">
+
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal29.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal30.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal31.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal32.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal33.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal34.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal35.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal36.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal37.png" class="hidden image">
+
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal38.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal39.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal40.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal41.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal42.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal43.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal44.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal45.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal46.png" class="hidden image">
+
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal47.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal48.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal49.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal50.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal51.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal52.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal53.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/coronal/coronal54.png" class="hidden image">
+		
+	</div>
+
+	<div id="sagittal-backgrounds" class="hidden">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal04.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal05.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal06.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal07.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal08.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal09.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal10.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal11.png" class="hidden image">
+
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal12.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal13.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal14.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal15.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal16.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal17.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal18.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal19.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal20.png" class="hidden image">
+
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal21.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal22.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal23.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal24.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal25.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal26.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal27.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal28.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal29.png" class="hidden image">
+
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal30.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal31.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal32.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal33.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal34.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal35.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal36.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal37.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal38.png" class="hidden image">
+
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal39.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal40.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal41.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal42.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal43.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal44.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal45.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal46.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal47.png" class="hidden image">
+
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal48.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal49.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal50.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal51.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal52.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal53.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal54.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal55.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal56.png" class="hidden image">
+
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal57.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal58.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal59.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal60.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal61.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal62.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal63.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal64.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/sagittal/sagittal65.png" class="hidden image">
+
+		
+	</div>
+	<div id="axial-backgrounds" class="hidden">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial06.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial07.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial08.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial09.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial10.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial11.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial12.png" class="hidden image">
+
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial13.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial14.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial15.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial16.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial17.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial18.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial19.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial20.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial21.png" class="hidden image">
+
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial22.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial23.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial24.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial25.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial26.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial27.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial28.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial29.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial30.png" class="hidden image">
+
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial31.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial32.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial33.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial34.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial35.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial36.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial37.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial38.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial39.png" class="hidden image">
+
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial40.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial41.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial42.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial43.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial44.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial45.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial46.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial47.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial48.png" class="hidden image">
+
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial49.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial50.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial51.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial52.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial53.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial54.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial55.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial56.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial57.png" class="hidden image">
+
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial58.png" class="hidden image">
+		
+			<img src="http://brainviz.irc.utexas.edu/static/backgrounds/axial/axial59.png" class="hidden image">
+		
+	</div>
+	

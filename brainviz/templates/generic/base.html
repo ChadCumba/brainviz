@@ -1,24 +1,9 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
-	<!--
-	IE's stated behavior is to determine page type from the doctype. However,
-	various settings will display pages in quirksmode regardless. As this site
-	does not work in quirksmode, I'm including conditional comments to force 
-	html5 mode. The IE docs claim that this is unnecessary, but testing has 
-	proven otherwise.
-	
-	On a side note, their "Make web not war" campaign to reach out to developers
-	appears to be falling apart again. I thought we were done with this type of
-	garbage.
-	-->
-	
-	<!--[if IE]>
-	<meta http-equiv="X-UA-Compatible" content="IE=100">
-	<![endif]-->	
-	
-    {% block styles %}
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+ {% block styles %}
       {% for sheet in styles %}
 <LINK REL=StyleSheet HREF="{{sheet}}" TYPE="text/css" MEDIA=screen>
       {% endfor %}
@@ -34,18 +19,60 @@
     <title>{% block title %}{{title}}{% endblock %}</title>
 </head>
 
-<body>
-    {% if messages %}
+<body topmargin="0" leftmargin="0" rightmargin="0" bottommargin="0" marginheight="0" marginwidth="0" bgcolor="#FFFFFF">
+	{% if messages %}
     <ul class="messages">
         {% for message in messages %}
         <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
         {% endfor %}
     </ul>
     {% endif %}
-    <div id="content">
+
+<table border="0" width="100%" cellspacing="0" cellpadding="0" background="/static/img/topbkg.gif">
+  <tr>
+    <td width="50%" valign="top"><img border="0" src="/static/img/logo.gif" width="145" height="66"></td>
+    <td width="50%" valign="top">
+      <p align="right"><img border="0" src="/static/img/topright.gif" width="315" height="66"></td>
+  </tr>
+</table>
+<table border="0" width="100%" cellspacing="0" cellpadding="0" background="/static/img/blackline.gif">
+  <tr>
+    <td width="100%">
+      <p align="left"><font color="#F0D8B8" face="Arial" size="2"><b>&nbsp;&nbsp;
+      <a href="/">Home</a>&nbsp;&nbsp; |&nbsp;&nbsp; <a href="/anonymous/upload">Upload an image</a>&nbsp;&nbsp; |&nbsp;&nbsp;
+      <a href="/faq">FAQ</a>&nbsp;&nbsp; |&nbsp;&nbsp; <a href="/signup">Create an account</a>&nbsp;&nbsp; |&nbsp;&nbsp;
+      <a href="/admin">Login</a>&nbsp;&nbsp; |&nbsp;&nbsp; <a></a>&nbsp;&nbsp; |&nbsp;&nbsp;
+      <a></a></b></font></td>
+  </tr>
+</table>
+<p align="left" style="margin-left: 20"><font face="Arial" color="#000000" size="4">
+	{% block header1 %}
+		{{header1}}
+	{% endblock %}
+</font></p>
+<div id="content">
         {% block content %}
                 {{content}}
         {% endblock %}
-    </div>
+</div>
+<p align="left" style="margin-left: 20"><font face="Arial" size="2" color="#000000">&nbsp;</font></p>
+<p align="left" style="margin-left: 20"><font face="Arial" size="2" color="#000000">&nbsp;</font></p>
+<p align="left" style="margin-left: 20"><font face="Arial" size="2" color="#000000">&nbsp;</font></p>
+<p align="left" style="margin-left: 20"><font face="Arial" color="#000000" size="4">
+	{% block header2 %}
+		{{header2}}
+	{% endblock %}
+</font></p>
+<p align="left" style="margin-left: 20"><font face="Arial" size="2" color="#000000">&nbsp;</font></p>
+<p align="left" style="margin-left: 20"><font face="Arial" size="2" color="#000000">&nbsp;</font></p>
+<p align="left" style="margin-left: 20"><font face="Arial" size="2" color="#000000">&nbsp;</font></p>
+
+<table border="0" width="100%" cellspacing="0" cellpadding="0" background="/static/img/botbkg.gif">
+  <tr>
+    <td width="100%"><img border="0" src="/static/img/botbkg.gif" width="48" height="12"></td>
+  </tr>
+</table>
 </body>
+
 </html>
+

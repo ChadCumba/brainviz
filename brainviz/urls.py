@@ -19,4 +19,5 @@ urlpatterns = patterns('',
     (r'^image/', include('brainviz.image.urls')),
     (r'^$', 'brainviz.image.views.ImageListing'),
     (r'^signup/$',include('brainviz.signup.urls')),
+    (r'^anonymous/', include('brainviz.anonymous.urls')),
 )

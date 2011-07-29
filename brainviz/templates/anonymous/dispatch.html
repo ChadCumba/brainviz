@@ -1,0 +1,18 @@
+{% extends "generic/base.html" %}
+
+{% block title  %} Image Tools {% endblock %}
+
+{% block content %}
+Direct link to your brain image:
+<a href="{{link}}">{{link}}</a><br><br>
+If you've read the embedding FAQ and would like to try to embed the viewer in
+ your own site, the javascript you'll need is <a href="{{javascript}}">here (right click, save as)</a> 
+ <br />
+<br />
+If you would rather have something a litte easier to use, just copy/paste the following into any website. 
+<br />
+<textarea rows="3" cols="60" onclick="this.select()">{{iframe}}</textarea>
+
+
+
+{% endblock %}

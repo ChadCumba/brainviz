@@ -75,18 +75,33 @@ def ImageViewer(request, **kwargs):
                            for file in axial_backgrounds]
     axial_backgrounds.sort()
     
+    if not 'bare' in request.GET:
+    
+        return render_to_response(
+            'image/canvas.html',
+            {'title':'Image Viewer',
+             'js': js,
+             'styles': styles,
+             'image_id' : image_id,
+             'coronal_backgrounds': coronal_backgrounds,
+             'sagittal_backgrounds' : sagittal_backgrounds,
+             'axial_backgrounds' : axial_backgrounds,
+             'STATIC_URL' : settings.MEDIA_URL,
+             },
+            context_instance = RequestContext(request))
+        
     return render_to_response(
-        'image/canvas.html',
-        {'title':'Image Viewer',
-         'js': js,
-         'styles': styles,
-         'image_id' : image_id,
-         'coronal_backgrounds': coronal_backgrounds,
-         'sagittal_backgrounds' : sagittal_backgrounds,
-         'axial_backgrounds' : axial_backgrounds,
-         'STATIC_URL' : settings.MEDIA_URL,
-         },
-        context_instance = RequestContext(request))
+            'image/barecanvas.html',
+            {'title':'Image Viewer',
+             'js': js,
+             'styles': styles,
+             'image_id' : image_id,
+             'coronal_backgrounds': coronal_backgrounds,
+             'sagittal_backgrounds' : sagittal_backgrounds,
+             'axial_backgrounds' : axial_backgrounds,
+             'STATIC_URL' : settings.MEDIA_URL,
+             },
+            context_instance = RequestContext(request))
 
 @gzip_page
 def BackgroundImage(request):
