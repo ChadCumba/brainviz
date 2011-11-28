@@ -1,0 +1,528 @@
+/*  
+ * Theme Created By Mustardseed Media Inc. 
+*/
+
+/* GLOBAL RESETS  */
+html, body {
+border:0;
+margin:0;
+padding:0;
+}
+
+body p	{
+padding-top: 0;
+margin-top: 0;
+}
+		
+ul,
+ol {
+padding:0 0 10px 20px;
+}
+
+li	{
+margin-bottom: .5em;
+}
+img {
+border:0;
+}
+
+
+/*LINK STYLES*/
+
+a:link, a:visited {
+text-decoration: underline;
+color: #752121;
+
+}
+a:hover {color: #000;
+}
+
+div.error a:link,
+div.error a:visited	{color: #999;
+}
+
+#logo h1 a {
+color: #336699;
+text-decoration: none;
+}
+
+h2 a:link,
+h2 a:visited 	{
+color: #525252;
+text-decoration: none;
+}
+
+h2 a:hover {
+color: #000;
+}
+
+#subnav a:link,
+#subnav a:visited	{
+color: #888;
+text-decoration: none;
+padding: 5px 10px;
+}
+
+#subnav a:hover {
+background-color: #ccc;
+color: #fff;
+}
+
+.node-links a:link,
+.node-links a:visited	{
+color: #888;
+padding: 5px 10px;
+
+}
+
+.node-links a:hover {
+color: #fff;
+background-color: #888;
+text-decoration: none;
+}
+
+
+/* HEADING STYLES */
+
+h1, h2, h3, h4, h5, h6  {
+font-family:Georgia,"Bitstream Vera Serif","Times New Roman", serif;
+color: #525252;
+font-weight: bold;
+padding: 0;
+margin: 0;
+}
+
+h1	{
+font-size: 250%;
+margin-bottom: .3em;
+line-height: 1em;
+}
+h2		{
+color: #336699;
+font-size: 200%;
+margin: 1em 0 .3em 0;
+}
+h3 	{
+font-size: 150%;
+color: #666;
+}
+h4		{
+color: #666;
+font-size: 125%;}
+h5, h6	{font-size: 100%;}
+
+#logo h1 {
+margin: 0;
+padding: 20px 0px 10px 0px;
+font-size: 250%;
+}
+					
+/*MAIN PAGE LAYOUT */
+
+body	  {
+background-color: #fff;
+font-size: .9em;
+font-family: veranda, arial, helvetica, sans-serif;
+color: #777;
+line-height: 1.6em;
+}
+
+#header-section	{
+border-bottom: 1px solid #ccc;
+}
+.wrapper  {
+margin-left: auto;
+margin-right: auto;
+width: 890px;
+					
+}
+
+#logo  {
+width: 210px;
+float: left;
+}
+
+#nav	{
+text-align: right;
+float: right;
+width:680px;
+}
+
+#subnav  {
+text-align: right;
+font-size: 1.1em;
+border-bottom: 1px solid #efefef;
+background-color: #fefefe;
+}
+
+#content-region	{
+padding: 10px;
+}
+
+#body-section	{
+line-height: 1.6em;
+width: 900px;
+}
+
+#body-section-wide	{
+line-height: 1.6em;
+width: 100%;
+}
+
+
+#left-sidebar	{
+float: left;
+width: 210px;
+}
+
+
+#footer	{
+font-size: .9em;
+margin-top: 20px;
+margin-bottom: 20px;
+text-align: right;
+}
+
+#feeds	{
+float: left;
+text-align: left;
+}
+
+/* PRIMARY LINKS */
+
+#main-menu-links,
+#main-menu-links li 	{
+		margin: 0px;
+		padding: 0px;
+		list-style: none;
+		list-style-type: none;
+		list-style-image: none;
+}
+
+#nav #main-menu-links li {
+padding: 0;
+font-size: 17px;
+float: left;
+}
+#nav #main-menu-links li a {
+text-decoration: none;
+padding: 70px 10px 10px 10px;
+display: block;
+float: left;
+color: #49698f;
+background-image: url(images/nav-bg-normal.jpg);
+background-repeat: repeat-x;
+border-right: 1px solid #ccc;
+}
+#nav #main-menu-links li.first a {
+border-left: 1px solid #ccc;
+}
+
+#nav #main-menu-links li a:hover,
+#nav #main-menu-links li a.active {
+background-image: url(images/nav-bg-hover.jpg);
+color: #333;
+}
+
+/* SECONDARY LINKS */
+#subnav li	{
+padding: 0px;
+margin: 0px;
+}
+
+#subnav li.first	{
+padding-left: 0px;
+}
+
+/* SITE WIDE STUFF */
+
+#slogan	{
+color: #ccc;
+font-style: italic;
+font-size: 1.2em;
+margin-top: 5px;
+}
+
+.sitelogo {
+display: block;
+margin-bottom: 20px;
+}
+
+div.error	{
+margin-bottom: 20px;
+background-color: #752121;
+color: #fff;
+border: 1px solid #000;
+padding: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
+-webkit-border-radius: 5px;
+}
+
+.submitted	{
+font-style: italic;
+font-size: .9em;
+color: #888;
+}
+.content	{
+margin-top: 1em;
+}
+
+.node-teaser 	{
+margin-bottom: 20px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+-webkit-border-radius: 10px;
+padding: 10px;
+background-color: #fefefe;
+border: 1px solid #ccc;
+}
+
+.node-teaser h2	{
+margin-top: 0px;
+}
+
+.node-links	{
+border: 1px solid #ccc;
+padding: 0px;
+font-size: .9em;
+-moz-border-radius: 5px;
+border-radius: 5px;
+-webkit-border-radius: 5px;
+}
+
+.node-links ul,
+.node-links ul li	{
+padding: 0;
+margin: 0;
+}
+.node-links ul li {
+
+}
+
+.node-type-list dt	{
+font-size: 200%;
+line-height: 1em;
+font-family:Georgia,"Bitstream Vera Serif","Times New Roman", serif;
+margin-bottom: 10px;
+}
+
+.node-type-list dd {
+margin-bottom: 20px;
+margin-left: 20px;
+}
+
+.new {
+color: #752121;
+margin-bottom: 5px;
+font-weight: bold;
+}
+
+/* TABS */
+
+ul.primary,
+ul.primary li a,
+ul.primary li.active a {
+border: 0px;
+}
+
+
+ul.primary {margin: 0px;
+padding: 0px;
+margin-bottom: 20px;
+text-align: right;
+}
+
+
+ul.primary li a:link,
+ul.primary li a:visited,
+ul.primary li.active a:link {
+-moz-border-radius: 5px;
+border-radius: 5px;
+-webkit-border-radius: 5px;
+background-color: #fff;
+border: 1px solid #ccc;
+color: #999;
+text-decoration: none;
+}
+
+ul.primary li.active a,
+ul.primary li.active a.active,
+ul.primary li.active a:link,
+ul.primary li a:hover	{
+background-color: #752121;
+color: #fff;
+}
+
+/* BLOCKS */
+
+#left-sidebar .block {
+border: 1px solid #ccc;
+padding: 10px;
+font-size: .9em;
+-moz-border-radius: 10px;
+border-radius: 10px;
+-webkit-border-radius: 10px;
+margin-bottom: 20px;
+
+}
+
+#left-sidebar .block h2.block-title {
+margin-top: 0px;
+}
+
+/* COMMENTS */
+
+#comments	{margin-top: 30px;
+					font-size: .9em;
+}
+
+#comments .comment,
+.view-display-id-page .views-row-even,
+.view-display-id-page .views-row-odd 	{padding: 10px;
+									border: 1px solid #ccc;
+									margin-bottom: 10px;
+									-moz-border-radius: 10px;
+									-webkit-border-radius: 10px;
+									border-radius: 10px;
+									background-color: #fefefe;
+									}
+							
+
+#comments .comment .content		{padding: 5px 0px;
+													margin: 5px 0px;
+													border-top: 1px solid #eee;
+													border-bottom: 1px solid #eee;
+}
+.indented	{margin-left: 10px;
+}
+
+#comments h2	{margin-top: 0px;
+}
+
+#comment-form	{margin-bottom: 40px;
+							background-color: #fefefe;
+
+}
+
+.comment-preview	{
+border: 1px solid #ccc;
+padding: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+-webkit-border-radius: 10px;
+margin-bottom: 20px;
+}
+
+/* PAGERS */
+.item-list ul.pager a:link,
+.item-list ul.pager a:visited {
+color: #999;
+padding: 3px;
+border: 1px solid #ccc;
+margin-right: 5px;
+text-decoration: none;
+}
+.item-list ul.pager a:hover {
+background-color: #752121;
+color: #fff;
+}
+
+.item-list ul.pager li.last a	 {
+margin-right: 0;
+}
+
+.item-list ul.pager li.pager-current {
+padding: 3px;
+border: 1px solid #ccc;
+margin-right: 5px;
+background-color: #ccc;
+color: #fff;
+}
+
+.item-list ul.pager,
+.item-list ul.pager li {
+padding: 0px;
+margin: 0px;
+}
+
+
+.item-list ul.pager	 {
+margin-top: 40px;
+text-align: right;
+}
+
+/* USER LOGIN FORM */
+#user-login input,
+#user-register input {
+font-size: 1.1em;
+}
+
+#header-section
+{
+	background-image:url('images/brain-row-horz-103.png');
+	background-position: left center;
+	background-repeat: no-repeat;
+	width:100%;
+}
+
+#nav #main-menu-links li 
+{
+	background-color: #FFFFFF;
+}
+
+.view-display-id-attachment_1 .node-links
+{
+	display: none;
+}
+
+.field-type-openfmri-taxonomy-mixed-format{
+	width: 100%;
+}
+
+.field-type-openfmri-taxonomy-mixed-format .field-item{
+
+}
+
+
+.openfmri_widget_view_task p{
+}
+
+.openfmri_widget_view {
+    min-height: 50px;
+}
+.field-type-openfmri-taxonomy-mixed-format table{
+	width: 100%;
+}
+.field-type-openfmri-taxonomy-mixed-format td{
+	width: 50%;
+}
+
+.field-name-field-pubmedlink{
+}
+
+.field-name-field-pubmedlink  .even{
+	margin-top:10px;
+}
+
+.field-name-field-pubmedlink  .odd{
+	margin-top:10px;
+}
+
+.clearfix:after {
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
+
+div{
+	display: block;
+	float:none;
+}
+
+#body-section div{
+    display: block;
+    float: left;
+}

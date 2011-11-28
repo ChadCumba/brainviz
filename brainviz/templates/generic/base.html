@@ -1,14 +1,16 @@
-<!DOCTYPE html>
 <html>
-
 <head>
+	
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+
  {% block styles %}
       {% for sheet in styles %}
 <LINK REL=StyleSheet HREF="{{sheet}}" TYPE="text/css" MEDIA=screen>
       {% endfor %}
     {% endblock %}
 <LINK REL=StyleSheet HREF="/static/styles/generic.css" TYPE="text/css" MEDIA=screen>
+<LINK REL=StyleSheet HREF="/static/styles/superclean.css" TYPE="text/css" MEDIA=screen>
+
     {% block javascript %}
         {% for file in js %}
 <script type="text/javascript" src="{{file}}"></script>
@@ -16,10 +18,10 @@
     {% endblock %}
     {% block header_additions %}
     {% endblock %}
-    <title>{% block title %}{{title}}{% endblock %}</title>
-</head>
+<title>{% block title %}{{title}}{% endblock %}</title>
 
-<body topmargin="0" leftmargin="0" rightmargin="0" bottommargin="0" marginheight="0" marginwidth="0" bgcolor="#FFFFFF">
+</head>
+<body>
 	{% if messages %}
     <ul class="messages">
         {% for message in messages %}
@@ -27,51 +29,67 @@
         {% endfor %}
     </ul>
     {% endif %}
+	<div id="header-section" class="clearfix">
+        <div class="wrapper clearfix">
+            <div id="logo">            	
+            	    <div id="slogan">
+            	        <!-- slogan here -->
+            	    </div>
 
-<table border="0" width="100%" cellspacing="0" cellpadding="0" background="/static/img/topbkg.gif">
-  <tr>
-    <td width="50%" valign="top"><img border="0" src="/static/img/logo.gif" width="145" height="66"></td>
-    <td width="50%" valign="top">
-      <p align="right"><img border="0" src="/static/img/topright.gif" width="315" height="66"></td>
-  </tr>
-</table>
-<table border="0" width="100%" cellspacing="0" cellpadding="0" background="/static/img/blackline.gif">
-  <tr>
-    <td width="100%">
-      <p align="left"><font color="#F0D8B8" face="Arial" size="2"><b>&nbsp;&nbsp;
-      <a href="/" class="navlink">Home</a>&nbsp;&nbsp; |&nbsp;&nbsp; <a href="/anonymous/upload" class="navlink">Upload an image</a>&nbsp;&nbsp; |&nbsp;&nbsp;
-      <a href="/faq" class="navlink">FAQ</a>&nbsp;&nbsp; |&nbsp;&nbsp; <a href="/signup" class="navlink">Create an account</a>&nbsp;&nbsp; |&nbsp;&nbsp;
-      <a href="/admin" class="navlink">Login</a></b></font></td>
-  </tr>
-</table>
-<p align="left" style="margin-left: 20"><font face="Arial" color="#000000" size="4">
-	{% block header1 %}
-		{{header1}}
-	{% endblock %}
-</font></p>
-<div id="content">
-        {% block content %}
+            </div>  <!-- END LOGO -->
+            
+    <div id="nav" class="navigation">
+        <ul id="main-menu-links" class="links clearfix">
+        	<li class="menu-227 first"><a href="/">Home</a></li>
+			<li class="menu-435"><a href="/anonymous/upload" title="">Upload an Image</a></li>
+			
+			<li class="menu-852"><a href="/faq" >FAQ</a></li>
+			<li class="menu-1715"><a href="/signup">Create an account</a></li>
+			<li class="menu-854 last"><a href="/admin" title="">Login</a></li>
+		</ul>
+	</div> <!-- /#nav -->
+
+        </div> <!-- END WRAPPER -->
+    </div> <!--END HEADER SECTION-->
+	
+
+
+      <div id="subnav" class="navigation">
+      	<div class="wrapper">
+        	<!-- sub nav links here -->
+     	 </div><!--/wrapper-->
+      </div> <!-- /subnav -->
+
+
+
+
+    <div id="content-region" class="wrapper clearfix">
+		
+       
+            <div id="left-sidebar">
+            	{% block header1 %}
+					{{header1}}
+				{% endblock %}
+				<!-- left sidebar content goes here -->
+            </div> <!--END LEFT SIDEBAR-->
+      
+        
+        <div id="body-section">
+					
+        	<h1 id="page-title"></h1>
+			{% block content %}
                 {{content}}
-        {% endblock %}
-</div>
-<p align="left" style="margin-left: 20"><font face="Arial" size="2" color="#000000">&nbsp;</font></p>
-<p align="left" style="margin-left: 20"><font face="Arial" size="2" color="#000000">&nbsp;</font></p>
-<p align="left" style="margin-left: 20"><font face="Arial" size="2" color="#000000">&nbsp;</font></p>
-<p align="left" style="margin-left: 20"><font face="Arial" color="#000000" size="4">
-	{% block header2 %}
-		{{header2}}
-	{% endblock %}
-</font></p>
-<p align="left" style="margin-left: 20"><font face="Arial" size="2" color="#000000">&nbsp;</font></p>
-<p align="left" style="margin-left: 20"><font face="Arial" size="2" color="#000000">&nbsp;</font></p>
-<p align="left" style="margin-left: 20"><font face="Arial" size="2" color="#000000">&nbsp;</font></p>
-
-<table border="0" width="100%" cellspacing="0" cellpadding="0" background="/static/img/botbkg.gif">
-  <tr>
-    <td width="100%"><img border="0" src="/static/img/botbkg.gif" width="48" height="12"></td>
-  </tr>
-</table>
+        	{% endblock %}			
+            
+        </div><!--END BODY-SECTION-->
+    </div> <!-- END CONTENT-REGION -->
+    
+    <div id="footer" class="wrapper clearfix">
+			{% block header2 %}
+				{{header2}}
+			{% endblock %}
+    </div> <!--END FOOTER-->
 </body>
-
+    
 </html>
 
