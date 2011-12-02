@@ -526,3 +526,16 @@ div{
     display: block;
     float: left;
 }
+
+#body-section div.fieldWrapper
+{
+	float: none;
+}
+
+#body-section .fieldWrapper label{
+	
+}
+
+#body-section div.pagination{
+	float: none;
+}
