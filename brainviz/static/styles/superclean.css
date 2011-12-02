@@ -210,7 +210,7 @@ padding: 70px 10px 10px 10px;
 display: block;
 float: left;
 color: #49698f;
-background-image: url(images/nav-bg-normal.jpg);
+/*background-image: url(images/nav-bg-normal.jpg);*/
 background-repeat: repeat-x;
 border-right: 1px solid #ccc;
 }
@@ -220,7 +220,7 @@ border-left: 1px solid #ccc;
 
 #nav #main-menu-links li a:hover,
 #nav #main-menu-links li a.active {
-background-image: url(images/nav-bg-hover.jpg);
+/*background-image: url(images/nav-bg-hover.jpg);*/
 color: #333;
 }
 
